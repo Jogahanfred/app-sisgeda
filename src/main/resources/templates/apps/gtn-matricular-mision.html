@@ -1,0 +1,458 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}">
+
+<th:block layout:fragment="pagetitle"> 
+	<div th:replace="partials/title-meta :: title-meta('Registrar Misiones por Sub Fase')"></div>
+</th:block>
+
+<head> 
+	<link href="/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="partials/page-title :: page-title('Registrar Misiones por Sub Fase','Generar Evaluación')"></div>
+		<div class="row">
+			<div class="col-xl-8">
+				<div class="card">
+					<div class="card-body checkout-tab">
+
+						<form action="#">
+							<div class="step-arrow-nav mt-n3 mx-n3 mb-3">
+
+								<ul class="nav nav-pills nav-justified custom-nav" role="tablist">
+									<li class="nav-item" role="presentation">
+										<button class="nav-link fs-15 p-3 active" 
+												id="pills-bill-info-tab"
+												data-bs-toggle="pill" 
+												data-bs-target="#pills-bill-info" 
+												type="button"
+												role="tab" 
+												aria-controls="pills-bill-info" 
+												aria-selected="true">
+											<i class="ri-filter-2-line fs-16 p-2 bg-soft-primary text-primary rounded-circle align-middle me-2"></i>
+											Filtrar 
+										</button>
+									</li>
+									<li class="nav-item" role="presentation">
+										<button class="nav-link fs-15 p-3" 
+												id="pills-bill-address-tab"
+												data-bs-toggle="pill" 
+												data-bs-target="#pills-bill-address" 
+												type="button"
+												role="tab" 
+												aria-controls="pills-bill-address" 
+												aria-selected="false">
+											<i class="ri-refresh-line fs-16 p-2 bg-soft-primary text-primary rounded-circle align-middle me-2"></i>
+											Procesar
+										</button>
+									</li>
+									<li class="nav-item" role="presentation">
+										<button class="nav-link fs-15 p-3" 
+												id="pills-payment-tab" 
+												data-bs-toggle="pill"
+												data-bs-target="#pills-payment" 
+												type="button" role="tab"
+												aria-controls="pills-payment" 
+												aria-selected="false">
+											<i class="ri-bank-card-line fs-16 p-2 bg-soft-primary text-primary rounded-circle align-middle me-2"></i>
+											Incorporar
+										</button>
+									</li>
+								  	
+									<li class="nav-item" role="presentation">
+										<button class="nav-link fs-15 p-3" 
+												id="pills-finish-tab" 
+												data-bs-toggle="pill"
+												data-bs-target="#pills-finish" 
+												type="button" 
+												role="tab"
+												aria-controls="pills-finish" 
+												aria-selected="false">
+											<i class="ri-checkbox-circle-line fs-16 p-2 bg-soft-primary text-primary rounded-circle align-middle me-2"></i>
+											Finalizar
+										</button>
+									</li>
+								</ul>
+							</div>
+
+							<div class="tab-content">
+								<div class="tab-pane fade show active" 
+									 id="pills-bill-info" 
+									 role="tabpanel"
+									 aria-labelledby="pills-bill-info-tab">
+									<div>
+										<h5 class="mb-1">Búsqueda de Sub Fase</h5>
+										<p class="text-muted mb-4">Por favor filtre la información necesaria para obtener la sub fase requerida</p>
+									</div>
+
+									<div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="mb-3">
+													<label for="cboBusquedaEscuadron" class="form-label">Escuadrón</label>
+													<select class="form-control mb-0" 
+														    data-choices 
+														    data-choices-search-false 
+														    id="cboBusquedaEscuadron">
+														  <option th:each="selector : ${selectorEscuadron}"
+					                            				  th:value="${selector.value}"
+															      th:text="${selector.text}"
+															      th:selected="${selector.selected}">
+														  </option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-sm-6">
+												<div class="mb-3">
+													<label for="cboBusquedaPrograma" class="form-label">Programa</label>
+													<select class="form-control" 
+														    data-plugin="choices" 
+														    data-choices
+															data-choices-search-false 
+															name="choices-single-default"
+															id="cboBusquedaPrograma"> 
+														<option value="">Programa</option>
+													</select>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="mb-3">
+													<label for="cboBusquedaFase" class="form-label">Fase</label>
+													<select class="form-control" 
+														    data-plugin="choices" 
+														    data-choices
+															data-choices-search-false  
+															name="choices-single-default"
+															id="cboBusquedaFase"> 
+														<option value="">Fase</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-sm-6">
+												<div class="mb-3">
+													<label for="cboBusquedaSubFase" class="form-label">Sub Fase</label>
+													<select class="form-control" 
+														    data-plugin="choices" 
+														    data-choices
+															data-choices-search-false 
+															name="choices-single-default"
+															id="cboBusquedaSubFase"> 
+														<option value="">Sub Fase</option>
+													</select>
+												</div>
+											</div>
+										</div>
+
+										<div class="my-4 border border-dashed"></div>
+										
+										<div class="text-center">											
+											
+											<div id="elmLoader" style="position: relative; display: none;">
+												<div class="spinner-border text-primary avatar-sm" role="status">
+													<span class="visually-hidden">Cargando...</span>
+												</div> 
+											</div>
+											 
+											<div id="content-sub-fase" class="offset-lg-3 col-lg-6 col-sm-6" style="display: none;">
+												<div class="form-check card-radio">
+													<input id="subFaseSeleccionada" 
+														   name="subFaseSeleccionada" 
+														   type="radio"
+														   class="form-check-input" 
+														   checked>
+													<label class="form-check-label" for="subFaseSeleccionada">
+														<span id="txtSubFase-txDescripcionSubFase" class="mb-4 fw-semibold d-block text-muted text-uppercase"></span>
+ 														<span id="txtSubFase-nuTotalHora"  class="text-muted fw-normal text-wrap mb-1 d-block"></span>
+														<span id="txtSubFase-nuTotalManiobra"  class="text-muted fw-normal text-wrap mb-1 d-block"></span>
+														<span id="txtSubFase-nuTotalMision"  class="text-muted fw-normal text-wrap mb-1 d-block"></span>														 
+													</label>
+												</div>
+												<div class="d-flex flex-wrap p-2 py-1 bg-light rounded-bottom border mt-n1">
+													 <div>
+														<a href="#" 
+														   class="d-block text-body p-1 px-2">
+														   <i class="ri-award-fill text-muted align-bottom me-1"></i>
+															Sub Fase seleccionada
+														</a>
+													</div> 
+												</div>
+											</div>
+										</div> 
+ 
+
+										<div class="d-flex align-items-start gap-3 mt-3">
+											<button id="procesar-sub-fase"
+													type="button" 
+													class="btn btn-primary btn-label right ms-auto nexttab"
+													data-nexttab="pills-bill-address-tab">
+												<i class="ri-refresh-line label-icon align-middle fs-16 ms-2"></i>
+												Procesar Sub Fase
+											</button>
+										</div>
+									</div>
+								</div> 
+
+								<div class="tab-pane fade" id="pills-bill-address" role="tabpanel"
+									aria-labelledby="pills-bill-address-tab">
+									<div>
+										<h5 class="mb-1">Procesar Información</h5>
+										<p class="text-muted mb-4">Porfavor verifique la información antes de procesar</p>
+									</div>
+
+									<div class="mt-4">
+										<div class="d-flex align-items-center mb-2">
+											<div class="flex-grow-1">
+												<h5 class="fs-14 mb-0">Misiones Generadas<span class="text-muted">(Seleccione la misión de chequeo)</span></h5>
+											</div>
+											<div class="flex-shrink-0">
+												<button type="button" 
+														class="btn btn-sm btn-success mb-3" 
+														id="btnGenerarCruce">
+													Generar Cruce
+												</button>
+											</div>
+										</div>
+										
+										<div id="content-detalle-mision" class="row gy-3"></div>
+ 
+										<div id="msg-mision" class="mt-4">  
+											<div class="alert alert-info alert-dismissible alert-label-icon rounded-label fade show material-shadow" 
+												 role="alert">
+											    <i class="ri-airplay-line label-icon"></i>
+											    <strong>Nota</strong> - Las misiones aun no se han completado. 
+											</div>
+										</div>
+									</div>
+
+									<div class="d-flex align-items-start gap-3 mt-4">
+										<button type="button" 
+												class="btn btn-light btn-label previestab"
+												data-previous="pills-bill-info-tab">
+											<i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+											Retornar a Filtros
+										</button>
+										<button type="button" 
+												class="btn btn-primary btn-label right ms-auto nexttab" 
+												data-nexttab="pills-payment-tab">
+											<i class="ri-bank-card-line label-icon align-middle fs-16 ms-2"></i>
+											Incorpora Operaciones
+										</button>
+									</div>
+								</div> 
+
+								<div class="tab-pane fade" id="pills-payment" role="tabpanel"
+									aria-labelledby="pills-payment-tab">
+									<div>
+										<h5 class="mb-1">Incorporar las Operaciones</h5>
+										<p class="text-muted mb-4">Porfavor seleccione la operación para obtener sus maniobras</p>
+									</div>
+									<div class="mt-4">
+										<div class="d-flex align-items-center mb-2">
+											<div class="flex-grow-1">
+												<h5 class="fs-14 mb-0">Obtener Operaciones<span class="text-muted">(Genera las operaciones para visualizar sus maniobras)</span></h5>
+											</div>
+											<div class="flex-shrink-0">
+												<button type="button" 
+														class="btn btn-sm btn-success mb-1" 
+														id="btnGenerarOperacion">
+													Generar Operaciones
+												</button>
+											</div>
+										</div>										
+										<div class="row mb-3"> 
+											<div class="col-md-12">
+												<label for="cboFiltroOperacion" 
+													   class="form-label">
+													 Operación
+												</label> 
+												<select class="form-control" 
+														id="cboFiltroOperacion"
+														data-choices 
+														data-choices-removeItem
+														name="choices-multiple-remove-button" 
+														multiple>
+													<option value="">Operación</option> 
+												</select>
+											</div>
+										</div> 	
+									</div>
+									
+									
+									<div class="my-4 border border-dashed"></div> 
+									
+									<div class="accordion custom-accordionwithicon" id="accordionOperacion"></div>
+									  
+									<div class="d-flex text-muted mt-3 fst-italic">
+										<i data-feather="alert-triangle" class="text-muted icon-xs mr-1"></i> 
+										Verifica la transacción en el &nbsp;<strong> "RESUMEN DE MISION" </strong>&nbsp; antes de completar la misión.
+									</div> 
+
+									<div class="d-flex align-items-start gap-3 mt-4">
+										<button type="button" 
+												class="btn btn-light btn-label previestab"
+												data-previous="pills-bill-address-tab">
+											<i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>
+											Volver a Procesar Misión
+										</button>
+										<button id="btnCompletarMision"
+												type="button" 
+												class="btn btn-primary btn-label right ms-auto nexttab" 
+												data-nexttab="pills-finish-tab">
+											<i class="ri-shopping-basket-line label-icon align-middle fs-16 ms-2"></i>
+											Completar Misión
+										</button>
+									</div>
+								</div> 
+
+								<div class="tab-pane fade" 
+									 id="pills-finish" 
+									 role="tabpanel"
+									 aria-labelledby="pills-finish-tab">
+									<div id="card-success" class="text-center py-5">
+										
+										<div class="mb-4"> 
+											<lord-icon id="successIcon"
+													   src="https://cdn.lordicon.com/wzwygmng.json" 
+													   trigger="loop"
+													   colors="primary:#0ab39c,secondary:#405189"
+													   style="width:120px;height:120px">
+											</lord-icon>
+											
+										</div>
+										<h5 id="txtTituloCompletado">¡Completa, registra y establece las misiones para cada sub fase académica!</h5>
+										<p id="txtSubTituloCompletado" class="text-muted">Cada misión implica una serie de maniobras que se evaluarán según un estándar mínimo establecido.</p>
+
+										<h3 id="btnBuscarSubFase" class="fw-semibold" style="display: none;">
+											Misión ID: 
+											<a id="idEnlace" href="/apps-ecommerce-order-details" 
+											   class="text-decoration-underline">
+											   
+											</a>
+										</h3> 
+										<div id="contentProgress" 
+											 class="mb-2" 
+											 style="display: none;">
+											<div class="progress progress-sm">
+										        <div id="barraProgreso" 
+										        	 class="progress-bar" 
+										        	 role="progressbar" 
+										        	 style="width: 100%;" 
+										        	 aria-valuenow="100" 
+										        	 aria-valuemin="0" 
+										        	 aria-valuemax="100">
+										        </div>
+										    </div>											
+										</div>
+										<div id="msgEmergente" class="alert alert-primary alert-dismissible alert-label-icon rounded-label fade show material-shadow" 
+											 role="alert"
+											 style="display: none;">
+										    <i class="ri-user-smile-line label-icon"></i>
+										    <strong>Información</strong> - Se está mostrando el enlace de registro. Tenga en cuenta que esta ventana se limpiara en <span id="contadorIntervalo">10</span> segundos. 
+										</div>
+
+								   </div> 
+								</div> 
+							</div> 
+						</form>
+					</div> 
+				</div> 
+			</div> 
+
+			<div class="col-xl-4">
+				<div class="card">
+					
+					<div class="card-header">
+						<div class="d-flex">
+							<div class="flex-grow-1">
+								<h5 class="card-title mb-0">Resumen de la Misión</h5>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card-body">
+						
+						<div class="col-lg-12">
+							<div class="form-check card-radio">
+								<input id="rm-card-sub-fase" 
+									   name="rm-card-sub-fase" type="radio"
+									   class="form-check-input">
+								<label class="form-check-label" for="rm-card-sub-fase" style="pointer-events:none">
+									<span id="rm-co-codigo" class="fs-20 float-end mt-2 text-wrap d-block fw-semibold">Código</span>
+									<span class="fs-14 mb-1 text-wrap d-block">Sub Fase</span>
+									<span id="rm-no-nombre" class="text-muted fw-normal text-wrap d-block">Sin selección</span>
+								</label>
+							</div>
+						</div>
+						
+						<div class="card-header align-items-center d-flex border-bottom-dashed">
+							<h4 class="card-title mb-0 flex-grow-1">Misiones</h4>
+							<div class="flex-shrink-0">
+								<button id="estado-btn-mision" type="button" class="btn btn-soft-danger btn-sm shadow-none" style="pointer-events: none;">
+									<i class="ri-share-line me-1 align-bottom"></i> No Verificada
+								</button>
+							</div>
+						</div> 
+						<div class="card-body px-0 py-1">
+							<div id="msg-rm-mision">  
+								<div class="alert alert-info alert-dismissible alert-label-icon rounded-label fade show material-shadow" 
+									 role="alert">
+									<i class="ri-airplay-line label-icon"></i>
+									<strong>Nota</strong> - Sin misiones.
+								</div>
+							</div>
+							<div id="rm-lst-mision" class="d-flex flex-wrap justify-content-center my-2 col-lg-12"> 
+							</div>
+						</div>			
+									 
+						<div class="card-header align-items-center d-flex border-bottom-dashed">
+							<h4 class="card-title mb-0 flex-grow-1">Maniobras</h4>
+							<div class="flex-shrink-0">
+								<button id="estado-btn-maniobra" type="button" class="btn btn-soft-danger btn-sm shadow-none" style="pointer-events: none;">
+									<i class="ri-share-line me-1 align-bottom"></i> No Verificada
+								</button>
+							</div>
+						</div>
+						<div class="card-body px-0 py-1">
+							<div id="msg-rm-operacion">  
+								<div class="alert alert-info alert-dismissible alert-label-icon rounded-label fade show material-shadow" 
+									 role="alert">
+									<i class="ri-airplay-line label-icon"></i>
+									<strong>Nota</strong> - Sin operaciones.
+								</div>
+							</div>
+							<div id="simple-bar-operacion" data-simplebar >
+								<div class="vstack gap-3" id="rm-lst-operacion"></div> 
+							</div>
+						</div> 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
+
+	<th:block layout:fragment="pagejs">
+
+		<!-- Matricular Mision js -->
+		<script src="/assets/js/pages/gtn-matricular-mision.init.js"></script>
+	
+		<script>
+			document.querySelector(".main-content").classList.add("overflow-hidden");
+		</script>
+		
+		<!-- Sweet Alerts js -->
+		<script src="/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+		
+		<!--Notifications js -->
+		<script src="/assets/js/notifications.js"></script>
+	</th:block>
+</body>
+
+</html>

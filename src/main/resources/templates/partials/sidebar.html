@@ -1,0 +1,213 @@
+<html>
+
+<body>
+	<div th:fragment="sidebar" th:remove="tag">
+		<!-- ========== App Menu ========== -->
+		<div class="app-menu navbar-menu">
+			<!-- LOGO -->
+			<div class="navbar-brand-box">
+				<!-- Dark Logo-->
+				<a href="/" class="logo logo-dark">
+					<span class="logo-sm">
+						<img src="/assets/images/logo-sm.png" alt="" height="22">
+					</span>
+					<span class="logo-lg">
+						<img src="/assets/images/logo-dark.png" alt="" height="17">
+					</span>
+				</a>
+				<!-- Light Logo-->
+				<a href="/" class="logo logo-light">
+					<span class="logo-sm">
+						<img src="/assets/images/logo-sm.png" alt="" height="22">
+					</span>
+					<span class="logo-lg">
+						<img src="/assets/images/logo-light.png" alt="" height="17">
+					</span>
+				</a>
+				<button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+					<i class="ri-record-circle-line"></i>
+				</button>
+			</div>
+
+			<div id="scrollbar">
+				<div class="container-fluid">
+
+					<div id="two-column-menu">
+					</div>
+					<ul class="navbar-nav" id="navbar-nav">
+						<li class="menu-title"><span data-key="t-menu">Menu</span></li>
+						<li class="nav-item">
+							<a class="nav-link menu-link" href="#sidebarPrincipal" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPrincipal">
+								<i class="mdi mdi-speedometer"></i> <span data-key="t-principal">Principal</span>
+							</a>
+							<div class="collapse menu-dropdown" id="sidebarPrincipal">
+								<ul class="nav nav-sm flex-column">
+									<li class="nav-item">
+										<a href="/" class="nav-link" data-key="t-dashboard"> Dashboard </a>
+									</li>
+									 
+								</ul>
+							</div>
+						</li> <!-- end Dashboard Menu -->
+						
+						<!--GENERAL-->
+						<li class="nav-item">
+							<a class="nav-link menu-link" href="#sidebarGeneral" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarGeneral">
+								<i class="mdi mdi-shield-link-variant-outline"></i> <span data-key="t-general">General</span>
+							</a>
+							<div class="collapse menu-dropdown" id="sidebarGeneral">
+								<ul class="nav nav-sm flex-column">
+									<li class="nav-item">
+										<a href="/unidades" class="nav-link" data-key="t-unidad"> Unidad </a>
+									</li>
+									 
+								</ul>
+							</div>
+						</li> 
+
+						<!--ADMINISTRACION-->
+						<li class="nav-item">
+							<a class="nav-link menu-link" href="#sidebarAdministracion" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAdministracion">
+								<i class="mdi mdi-dresser-outline"></i> <span data-key="t-administracion">Administración</span>
+							</a>
+							<div class="collapse menu-dropdown" id="sidebarAdministracion">
+								<ul class="nav nav-sm flex-column"> 
+									<li class="nav-item">
+										<a href="/flotas" class="nav-link" data-key="t-flota"> Flota </a>
+									</li> 
+									<li class="nav-item">
+										<a href="#sidebarBanco" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBanco" data-key="t-banco"> Bancos
+										</a>
+										<div class="collapse menu-dropdown" id="sidebarBanco">
+											<ul class="nav nav-sm flex-column">
+											 
+												<li class="nav-item">
+													<a href="/bancoFases" class="nav-link" data-key="t-banco-fase"> Banco de Fases </a>
+												</li>
+												<li class="nav-item">
+													<a href="/bancoSubFases" class="nav-link" data-key="t-banco-sub-fase"> Banco de Sub Fases </a>
+												</li>
+												<li class="nav-item">
+													<a href="/bancoManiobras" class="nav-link" data-key="t-banco-maniobra"> Banco de Maniobras </a>
+												</li>
+											 
+											</ul>
+										</div>
+									</li>
+									<li class="nav-item">
+										<a href="/escuadrones" class="nav-link" data-key="t-escuadron"> Escuadrón </a>
+									</li>    
+									 
+								</ul>
+							</div>
+						</li>
+						
+						<!--GESTION-->
+						<li class="nav-item">
+							<a class="nav-link menu-link" href="#sidebarGestion" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarGestion">
+								<i class="mdi mdi-shield-link-variant-outline"></i> <span data-key="t-gestion">Gestión</span>
+							</a>
+							<div class="collapse menu-dropdown" id="sidebarGestion">
+								<ul class="nav nav-sm flex-column">
+									<li class="nav-item">
+										<a href="/tipoMisiones" class="nav-link" data-key="t-tipoMision"> Tipo Misión </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/operaciones" class="nav-link" data-key="t-operacion"> Operación </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/maniobras" class="nav-link" data-key="t-maniobra"> Maniobra </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/programas" class="nav-link" data-key="t-programa"> Programa </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/fases" class="nav-link" data-key="t-fase"> Fase </a>
+									</li>  
+									<li class="nav-item">
+										<a href="/subFases" class="nav-link" data-key="t-subFase"> Sub Fase </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/personal" class="nav-link" data-key="t-personal"> Personal </a>
+									</li> 
+									<li class="nav-item">
+										<a href="#sidebarMiembro" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMiembro" data-key="t-miembro"> Miembros
+										</a>
+										<div class="collapse menu-dropdown" id="sidebarMiembro">
+											<ul class="nav nav-sm flex-column">
+											 
+												<li class="nav-item">
+													<a href="/miembros/instructores" class="nav-link" data-key="t-instructor"> Instructores </a>
+												</li>
+												<li class="nav-item">
+													<a href="/miembros/alumnos" class="nav-link" data-key="t-alumno"> Alumnos </a>
+												</li>
+											 
+											</ul>
+										</div>
+									</li> 
+									<li class="nav-item">
+										<a href="/aeronaves" class="nav-link" data-key="t-aeronave"> Aeronaves </a>
+									</li> 
+									 
+								</ul>
+							</div>
+						</li>  
+						
+						<!--PROCESOS-->
+						<li class="nav-item">
+							<a class="nav-link menu-link" href="#sidebarProceso" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProceso">
+								<i class="mdi mdi-shield-link-variant-outline"></i> <span data-key="t-gestion">Proceso</span>
+							</a>
+							<div class="collapse menu-dropdown" id="sidebarProceso">
+								<ul class="nav nav-sm flex-column">
+									
+									<li class="nav-item">
+										<a href="#sidebarMision" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMision" data-key="t-mision"> Generar Evaluación
+										</a>
+										<div class="collapse menu-dropdown" id="sidebarMision">
+											<ul class="nav nav-sm flex-column">
+											 
+												<li class="nav-item">
+													<a href="/procesos/matricular-sub-fase" class="nav-link" data-key="t-matricularSubFase"> Registro Automático de Misiones </a>
+												</li>
+												<li class="nav-item">
+													<a href="/procesos/gestionar-estandar-maniobras" class="nav-link" data-key="t-gestionarManiobra"> Asignar de Estándar </a>
+												</li> 
+												<li class="nav-item">
+													<a href="/procesos/gestionar-restriccion-maniobras" class="nav-link" data-key="t-gestionarManiobra"> Administrar Restricciones </a>
+												</li> 
+											 
+											</ul>
+										</div>
+									</li>
+									
+									<li class="nav-item">
+										<a href="/procesos/agrupar-alumnos" class="nav-link" data-key="t-sincronizarAlumnos"> Agrupar Alumnos </a>
+									</li> 
+									<li class="nav-item">
+										<a href="/procesos/programar-mision" class="nav-link" data-key="t-programarMision"> Programar Misión</a>
+									</li> 
+									<li class="nav-item">
+										<a href="/procesos/calificar-mision" class="nav-link" data-key="t-calificarMision"> Calificar Misión</a>
+									</li> 
+									 
+								</ul>
+							</div>
+						</li>  
+
+
+					</ul>
+				</div>
+				<!-- Sidebar -->
+			</div>
+
+			<div class="sidebar-background"></div>
+		</div>
+		<!-- Left Sidebar End -->
+		<!-- Vertical Overlay-->
+		<div class="vertical-overlay"></div>
+	</div>
+</body>
+
+</html>

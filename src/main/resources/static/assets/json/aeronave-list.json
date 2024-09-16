@@ -1,0 +1,72 @@
+[
+	{
+		"id_aeronave": "1",
+		"no_tipo_aeronave": "Helicoptero",
+		"no_flota": "CW9F",
+		"no_nombre": "MI-35",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "2",
+		"no_tipo_aeronave": "Fija",
+		"no_flota": "W3J1",
+		"no_nombre": "KT-1P",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "3",
+		"no_tipo_aeronave": "Helicoptero",
+		"no_flota": "W9EP",
+		"no_nombre": "MI-25",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "4",
+		"no_tipo_aeronave": "Fija",
+		"no_flota": "P92H",
+		"no_nombre": "CH-2000",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "5",
+		"no_tipo_aeronave": "Helicoptero",
+		"no_flota": "O89H",
+		"no_nombre": "MI-37",
+		"fl_estado": "Inactivo"
+	},
+	{
+		"id_aeronave": "6",
+		"no_tipo_aeronave": "Fija",
+		"no_flota": "OT19",
+		"no_nombre": "MIG-29",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "7",
+		"no_tipo_aeronave": "Fija",
+		"no_flota": "P0J7",
+		"no_nombre": "MIRAGE 2000",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "8",
+		"no_tipo_aeronave": "Helicoptero",
+		"no_flota": "I17G",
+		"no_nombre": "AN-25",
+		"fl_estado": "Inactivo"
+	},
+	{
+		"id_aeronave": "9",
+		"no_tipo_aeronave": "Fija",
+		"no_flota": "V92N",
+		"no_nombre": "ANTONOV",
+		"fl_estado": "Activo"
+	},
+	{
+		"id_aeronave": "10",
+		"no_tipo_aeronave": "Helicoptero",
+		"no_flota": "T72N",
+		"no_nombre": "CH-25",
+		"fl_estado": "Activo"
+	}
+]

@@ -1,0 +1,249 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout}">
+
+<th:block layout:fragment="pagetitle"> 
+	<div th:replace="partials/title-meta :: title-meta('Gestión de Sub Fase')"></div>
+</th:block>
+
+<head>  
+	<link rel="stylesheet" href="/assets/libs/@tarekraafat/autocomplete.js/css/autoComplete.css">
+</head>
+
+<body>
+	<div layout:fragment="content"> 
+		<div th:replace="partials/page-title :: page-title('Asignación y Gestión de Estandares para Maniobras','Generar Evaluación')"></div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-header border-0">
+						<div class="row justify-content-center mb-4">
+							<div class="col-lg-9">
+								<div class="row g-2">
+									<div class="col">
+										<div class="position-relative mb-3">
+											<input id="autoCompleteSubFase"
+												   type="text" 
+												   dir="ltr" 
+												   spellcheck=false 
+												   autocomplete="off" 
+												   autocapitalize="off"
+												   class="form-control form-control-lg bg-light border-light" 
+												   placeholder="Buscar Sub Fase... ">
+											
+										</div>
+									</div>
+									<div class="col-auto pt-1">
+										<button id="btnLimpiar" class="btn btn-primary btn-md waves-effect waves-light"><i class="mdi mdi-autorenew me-1"></i> Limpiar </button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-12">
+								<h5 class="fs-16 fw-semibold text-center mb-0">Muestra del resultado seleccionado	 "<span id="txtSubFaseEncontrada" class="text-primary fw-medium fst-italic">Sin selección </span> "</h5>
+							</div> 
+						</div>
+						<div id="contentDesglozarMisiones" class="row" style="display: none;">
+							<div class="col-lg-12">
+								<div class="d-lg-flex align-items-center mb-4">
+									<div class="flex-grow-1 pe-lg-3">
+										<div class="alert alert-warning mb-0 py-2">
+											Sub fase <b><span id="txtSubFaseSeleccionada">-</span></b> en selección 
+										</div> 
+									</div>
+									<div class="flex-shrink-0 mt-4 mt-lg-0">
+										<button id="btnDesglozarMisiones"
+												type="button" 
+												class="btn btn-soft-success waves-effect waves-light material-shadow-none">Desglozar misiones 
+											<i class="ri-arrow-down-line align-bottom"></i>
+										</button> 
+									</div>
+								</div>
+							</div>
+						</div>
+ 
+					</div> 
+					
+					<div class="mb-3 card-body"> 
+						<div id="tbl-matriz" > 
+						</div>
+						<div id="loader" class="text-center" style="display: none;">							
+							<div class="spinner-grow text-light" role="status">
+							    <span class="sr-only">Cargando...</span>
+							</div>
+							<div class="spinner-grow text-light" role="status">
+							    <span class="sr-only">Cargando...</span>
+							</div>
+							<div class="spinner-grow text-light" role="status">
+							    <span class="sr-only">Cargando...</span>
+							</div>
+						</div>
+					</div> 
+									
+					<div class="border-top border-top-dashed m-3">
+						<h6 class="my-3 fw-semibold text-uppercase text-center">Sumario</h6>
+						<div class="row g-3">
+							
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-info 
+														text-info 
+														rounded-circle 
+														shadow">
+												D
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Demostración
+												</a>
+											</h5>
+											<div>Demostrativo</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-warning 
+														text-warning 
+														rounded-circle 
+														shadow">
+												I
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Insuficiente
+												</a>
+											</h5>
+											<div>Estándar Insuficiente</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-primary 
+														text-primary 
+														rounded-circle 
+														shadow">
+												R
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Regular
+												</a>
+											</h5>
+											<div>Estándar Regular</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-secondary 
+														text-secondary 
+														rounded-circle 
+														shadow">
+												B
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Bueno
+												</a>
+											</h5>
+											<div>Estándar Bueno</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+							
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-success 
+														text-success 
+														rounded-circle 
+														shadow">
+												E
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Excelente
+												</a>
+											</h5>
+											<div>Estándar Excelente</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+							
+							<div class="col-xxl-2 col-lg-4">
+								<div class="border rounded border-dashed p-2">
+									<div class="d-flex align-items-center">
+										<div class="avatar-xs flex-shrink-0 me-3">
+											<div class="avatar-title 
+														bg-soft-light
+														text-dark 
+														rounded-circle 
+														shadow">
+												SE
+											</div>
+										</div>
+										<div class="flex-grow-1 overflow-hidden">
+											<h5 class="fs-13 mb-1">
+												<a href="#" class="text-body text-truncate d-block">
+													Sin Estándar
+												</a>
+											</h5>
+											<div>Sin Selección</div>
+										</div> 
+									</div>
+								</div>
+							</div> 
+											
+						</div> 
+					</div>
+				</div> 
+			</div> 
+		</div> 
+	</div>
+
+	<th:block layout:fragment="modal">
+
+	</th:block>
+	<th:block layout:fragment="pagejs"> 
+		<script src="/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js"></script> 
+		<script src="/assets/js/pages/gtn-gestionar-sub-fase.init.js"></script>
+		<!--Notifications js -->
+		<script src="/assets/js/notifications.js"></script>
+	</th:block>
+</body>

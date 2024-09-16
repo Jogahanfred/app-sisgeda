@@ -1,0 +1,443 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}">
+
+<th:block layout:fragment="pagetitle"> 
+	<div th:replace="partials/title-meta :: title-meta('Sub Fases')"></div>
+</th:block>
+
+<head> 
+	<link href="/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="partials/page-title :: page-title('Catálogo de Sub Fases','Gestión')"></div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card" id="listadoSubFases">
+					<div class="card-header border-bottom-dashed">
+
+						<div class="row g-4 align-items-center">
+							<div class="col-sm">
+								<div>
+									<h5 class="card-title mb-0">Resumen de Sub Fases</h5>
+								</div>
+							</div> 
+							<div class="col-sm-auto">
+								<div class="d-flex flex-wrap align-items-start gap-2">
+									
+									<button class="btn btn-soft-danger" 
+									        id="remove-actions"
+										    onClick="eliminarMultiple()">
+								    	<i class="ri-delete-bin-2-line"></i>
+								    </button>
+									
+									<button type="button" 
+									        class="btn btn-success add-btn" 
+									        data-bs-toggle="modal"
+											id="create-btn" 
+											data-bs-target="#mdSubFase">
+										<i class="ri-add-line align-bottom me-1"></i> Agregar Sub Fase
+									</button>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body border-bottom-dashed border-bottom">
+						<form>
+							<div class="row g-3">
+								
+								<div class="col-xl-4">
+									<div class="search-box">
+										<input type="text" 
+											   class="form-control search"
+											   placeholder="Buscar por Nombre, Estado...">
+										<i class="ri-search-line search-icon"></i>
+									</div>
+								</div> 
+								
+								<div class="col-xl-8">
+									<div class="row g-3"> 
+										<div class="col-sm-5">
+											<div> 
+												<select class="form-control" 
+												        data-plugin="choices" 
+												        data-choices
+												        data-choices-groups 
+														data-choices-search-false 
+														name="choices-single-default"
+														id="cboBusquedaEscuadron">
+													<option th:each="selector : ${selectorEscuadron}"
+			                            					th:value="${selector.value}"
+														    th:text="${selector.text}"
+														    th:selected="${selector.selected}">
+													</option>
+												</select>
+											</div>
+										</div>  
+										
+										<div class="col-sm-5">
+											<div>
+												<select class="form-control" 
+													    data-plugin="choices" 
+													    data-choices
+														data-choices-search-false 
+														name="choices-single-default"
+														id="cboBusquedaPrograma"> 
+													<option value="">Programa</option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="col-sm-2">
+											<div>
+												<button type="button" 
+													    class="btn btn-primary w-100"
+														onclick="filtrarInformacion();"> 
+														<i class="ri-equalizer-fill me-2 align-bottom"></i> Filtrar
+												</button>
+											</div>
+										</div> 
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<div>
+							<div class="table-responsive table-card mb-1">
+								<table class="table align-middle" id="tblSubFase">
+									<thead class="table-light text-muted">
+										<tr>
+											<th scope="col" style="width: 50px;">
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" id="checkAll" value="option">
+												</div>
+											</th>
+ 
+											<th class="sort" data-sort="tx_descripcion_programa">Programa</th>
+											<th class="sort" data-sort="tx_descripcion_fase">Fase</th>
+											<th class="sort" data-sort="tx_descripcion_sub_fase">Sub Fase</th>
+											<th class="sort text-center" data-sort="nu_total_hora">Total de Horas</th>
+											<th class="sort text-center" data-sort="nu_total_mision">Total Misiones</th>
+											<th class="sort text-center" data-sort="nu_total_maniobra">Total Maniobras</th>
+											<th class="sort text-center" data-sort="co_codigo">Código</th>
+											<th class="sort text-center" data-sort="fl_bloqueado">Visión</th>
+											<th class="sort text-center" data-sort="fl_estado">Estado</th>
+											<th class="sort" data-sort="accion">Accion</th>
+										</tr>
+									</thead>
+									<tbody class="list form-check-all">
+										<tr>
+											<th scope="row">
+												<div class="form-check">
+													<input class="form-check-input" 
+														   type="checkbox" 
+														   name="chk_child"
+														   value="option1">
+												</div>
+											</th>
+											<td class="id_sub_fase" style="display:none;"><a href="javascript:void(0);"
+													class="fw-medium link-primary">#VZ2101</a></td>
+											<td class="fw-medium link-primary tx_descripcion_programa">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td class="fw-medium link-primary tx_descripcion_fase">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td class="fw-medium link-primary tx_descripcion_sub_fase">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td class="nu_total_hora text-center" >
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td class="nu_total_mision text-center">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td> 
+											<td class="nu_total_maniobra text-center">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td> 
+											<td class="co_codigo text-center">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td> 
+											<td class="fl_bloqueado text-center">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td class="fl_estado text-center">
+												<p class="card-text placeholder-glow ">
+													<span class="placeholder col-12 bg-info" style="border-radius: 1rem;"></span>
+												</p>
+											</td>
+											<td>
+												<ul class="list-inline hstack gap-2 mb-0">
+													<li class="list-inline-item edit" 
+														data-bs-toggle="tooltip"
+														data-bs-trigger="hover" 
+														data-bs-placement="top" 
+														title="Editar">
+														<a href="#mdSubFase" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn">
+															<i class="ri-pencil-fill fs-16"></i>
+														</a>
+													</li>
+													<li class="list-inline-item" 
+														data-bs-toggle="tooltip"
+														data-bs-trigger="hover" 
+														data-bs-placement="top"
+														title="Eliminar">
+														<a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#mdEliminarRegistro">
+															<i class="ri-delete-bin-5-fill fs-16"></i>
+														</a>
+													</li>
+												</ul>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="noresult" style="display: none">
+									<div class="text-center">
+										<lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+											colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+										</lord-icon>
+										<h5 class="mt-2">Disculpa! No se encontraron datos</h5>
+										<p class="text-muted mb-0">
+											La información consultada no ha sido encontrada en nuestra base de datos.
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="d-flex justify-content-end">
+								<div class="pagination-wrap hstack gap-2">
+									<a class="page-item pagination-prev disabled" href="#">
+										Anterior
+									</a>
+									<ul class="pagination listjs-pagination mb-0"></ul>
+									<a class="page-item pagination-next" href="#">
+										Siguiente
+									</a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="modal fade" id="mdSubFase" tabindex="-1" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered modal-lg">
+								<div class="modal-content">
+									
+									<div class="modal-header bg-soft-warning p-3">
+										<h5 class="modal-title" id="mdTitulo"></h5>
+										<button type="button" 
+												class="btn-close" 
+												data-bs-dismiss="modal"
+												aria-label="Close" 
+												id="close-modal">
+										</button>
+									</div>
+									
+									<form class="needs-validation tablelist-form" autocomplete="off" novalidate>
+										<div class="modal-body">
+											<input type="hidden" id="idSubFase-field" />   
+											<input type="hidden" id="idFase-field" />     
+											
+											<div class="row">
+												<div class="col-md-6 mb-3">	
+													<label for="idEscuadron-field" 
+														   class="form-label">
+														 Escuadron
+													</label>
+													<select class="form-control mb-0" 
+													        data-choices 
+														    data-choices-search-false 
+														    id="idEscuadron-field" required>
+														  <option th:each="selector : ${selectorMdEscuadron}"
+							                          	    	  th:value="${selector.value}"
+																  th:text="${selector.text}">
+														  </option>
+													</select> 
+												</div>
+												
+												<div id="content-flBloqueado-field" class="mb-3 col-md-6" style="display: none;">
+													<label for="flBloqueado-field" class="form-label">Permiso</label>
+													<select class="form-control" data-choices data-choices-search-false
+															name="flBloqueado-field" id="flBloqueado-field">
+															<option value="">Permiso</option>
+															<option value="Permitido">Permitido</option>
+															<option value="Bloqueado">Bloqueado</option>
+													</select>
+												</div>
+											</div>
+											
+											<div class="mb-3"> 
+												<label for="idPrograma-field" 
+		  										       class="form-label">
+												      Programa
+												</label>
+												<select class="form-control mb-0" 
+															     data-choices 
+															     data-choices-search-false 
+															     id="idPrograma-field">
+													<option value="">Programa</option>
+												</select>
+											</div> 
+											
+											<div class="row mb-3">												
+												<div class="col-6">
+													<label for="idBancoFase-field" class="form-label">Fases</label>
+													<select class="form-control mb-0" 
+													        data-choices 
+														    data-choices-search-false 
+														    id="idBancoFase-field">
+														<option value="">Fase</option> 
+													</select>
+												</div>
+												
+												<div class="col-6">
+													<label for="idBancoSubFase-field" class="form-label">Sub Fases</label>
+													<select class="form-control mb-0" 
+													        data-choices 
+														    data-choices-search-false 
+														    id="idBancoSubFase-field">
+														  <option th:each="selector : ${selectorMdBancoSubFase}"
+							                          	          th:value="${selector.value}"
+																  th:text="${selector.text}">
+														  </option>
+													</select>
+												</div>
+											</div>
+											
+											<div class="my-4 border border-dashed"></div>
+											
+											<div class="row">				
+												<div class="col-md-6 col-lg-3 mb-3">	 
+													<label for="coCodigo-field" class="form-label">Código</label>
+													<input type="text" 
+														   id="coCodigo-field" 
+														   class="form-control"
+														   placeholder="Ingresar Código" 
+														   maxlength="10" required />
+													<div class="invalid-feedback">El código es requerido.</div>
+													<div class="valid-feedback">Código válido!</div>
+												</div>					
+												<div class="col-md-6 col-lg-3 mb-3">
+													<label for="nuTotalHora-field" class="form-label">Total de Horas</label>
+													<input type="text" id="nuTotalHora-field" class="form-control"
+														placeholder="Ingresar Total" max="150" required />
+													<div class="invalid-feedback">N° de Horas es requerido.</div>
+													<div class="valid-feedback">N° de Horas válido!</div>
+												</div>
+																		
+												<div class="col-md-6 col-lg-3 mb-3">
+													<label for="nuTotalMision-field" class="form-label">Total Misiones</label>
+													<input type="text" id="nuTotalMision-field" class="form-control"
+														placeholder="Ingresar Cantidad" max="30" required />
+													<div class="invalid-feedback">N° de Misiones es requerido.</div>
+													<div class="valid-feedback">N° de Misiones válido!</div>
+												</div>
+																		
+												<div class="col-md-6 col-lg-3 mb-3">
+													<label for="nuTotalManiobra-field" class="form-label">Total Maniobra</label>
+													<input type="text" id="nuTotalManiobra-field" class="form-control"
+														placeholder="Ingresar Cantidad" max="30" required />
+													<div class="invalid-feedback">N° de Maniobras es requerido.</div>
+													<div class="valid-feedback">N° de Maniobras válido!</div>
+												</div>	
+											</div> 
+											
+											<div class="mb-3">
+												<label for="txFinalidad-field" class="form-label">Finalidad</label>
+												<input type="text" id="txFinalidad-field" class="form-control"
+													placeholder="Ingresar Finalidad" maxlength="50" required />
+													<div class="invalid-feedback">La finalidad es requerida.</div>
+													<div class="valid-feedback">Finalidad válida!</div>
+											</div>
+
+
+										</div>
+										<div class="modal-footer">
+											<div class="hstack gap-2 justify-content-end">
+												<button type="button" 
+														class="btn btn-light"
+														data-bs-dismiss="modal">Cerrar</button>
+												<button type="submit" class="btn btn-success" id="add-btn"></button> 
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+						<!-- Modal -->
+						<div class="modal fade zoomIn" id="mdEliminarRegistro" tabindex="-1" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" 
+											    class="btn-close" 
+											    id="deleteRecord-close"
+												data-bs-dismiss="modal" 
+												aria-label="Close">
+										</button>
+									</div>
+									<div class="modal-body">
+										<div class="mt-2 text-center">
+											<lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+												colors="primary:#f7b84b,secondary:#f06548"
+												style="width:100px;height:100px"></lord-icon>
+											<div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+												<h4>¿Estas seguro?</h4>
+												<p class="text-muted mx-4 mb-0">¿Estas seguro de eliminar este registro?
+												</p>
+											</div>
+										</div>
+										<div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+											<button type="button" class="btn w-sm btn-light"
+												data-bs-dismiss="modal">Cerrar</button>
+											<button type="button" class="btn w-sm btn-danger" id="eliminar-registro">Si,
+												Eliminar!</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+				</div>
+
+			</div> 
+		</div> 
+	</div>
+
+
+	<th:block layout:fragment="pagejs"> 
+		<!-- list.js min js -->
+		<script src="/assets/libs/list.js/list.min.js"></script>
+		<script src="/assets/libs/list.pagination.js/list.pagination.min.js"></script>
+
+		<!-- Sub Fase init js -->
+		<script src="/assets/js/pages/gtn-sub-fase.init.js"></script>
+
+		<!-- Sweet Alerts js -->
+		<script src="/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+		
+		<!--Notifications js -->
+		<script src="/assets/js/notifications.js"></script>
+	</th:block>
+</body>
+
+</html>

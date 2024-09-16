@@ -1,0 +1,306 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layout}">
+
+<th:block layout:fragment="pagetitle">
+	<div th:replace="partials/title-meta :: title-meta('Programar Misión')"></div>
+</th:block>
+
+<head>
+</head>
+
+<body>
+	<div layout:fragment="content">
+
+		<div th:replace="partials/page-title :: page-title('Programar Misión','Proceso')"></div>
+
+		<div class="row g-4 mb-3">
+			
+			<div class="col-sm-auto">
+				<div> 
+					
+					<button id="addBtn"
+							type="button" 
+							class="btn btn-primary">
+					   <i class="ri-add-line align-bottom me-1"></i> 
+					   Registrar Grupo
+					</button>
+
+				</div>
+			</div>
+			 
+		</div>
+		<div class="row">
+			
+			<div class="col-xl-4">
+				<div class="card">
+					<div class="card-header align-items-center border-0 d-flex">
+						<h4 class="card-title mb-0 flex-grow-1">Consulta</h4>
+						<div class="flex-shrink-0">
+							<ul class="nav justify-content-end nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" data-bs-toggle="tab" href="#buy-tab" role="tab" aria-selected="false">Grupal</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" data-bs-toggle="tab" href="#sell-tab" role="tab" aria-selected="true">Individual</a>
+								</li>
+							</ul><!-- end ul -->
+						</div>
+					</div><!-- end cardheader -->
+					<div class="card-body p-0">
+						<div class="tab-content p-0">
+							<div class="tab-pane active" id="buy-tab" role="tabpanel">
+								<div class="p-3 bg-soft-warning">
+									<div class="float-end ms-2">
+										<h6 class="text-warning mb-0">Grupos : <span class="text-dark">4 registros</span></h6>
+									</div>
+									<h6 class="mb-0 text-danger">Buy Coin</h6>
+								</div>
+								<div class="p-3">
+									<div class="row">
+										<div class="col-6">
+											<div class="mb-3">
+												<label>Periodo :</label>
+												<select class="form-control"  
+												        data-choices
+														data-choices-search-false 
+														name="cboPeriodo-field"
+														id="cboPeriodo-field">
+							   		   				  <option th:each="periodo : ${selectorPeriodo}"
+							                    			  th:value="${periodo.value}"
+															  th:text="${periodo.text}"
+															  th:selected="${periodo.selected}">
+													  </option>
+												</select> 
+											</div>
+										</div><!-- end col -->
+										<div class="col-6">
+											<div class="mb-3">
+												<label>Payment Method :</label>
+												<select class="form-select">
+													<option>Wallet Balance</option>
+													<option>Credit / Debit Card</option>
+													<option>PayPal</option>
+													<option>Payoneer</option>
+												</select>
+											</div>
+										</div><!-- end col -->
+									</div><!-- end row -->
+									<div>
+										<div class="input-group mb-3">
+											<label class="input-group-text">Amount</label>
+											<input type="text" class="form-control" placeholder="0">
+										</div>
+
+										<div class="input-group mb-3">
+											<label class="input-group-text">Price</label>
+											<input type="text" class="form-control" placeholder="2.045585">
+											<label class="input-group-text">$</label>
+										</div>
+
+										<div class="input-group mb-0">
+											<label class="input-group-text">Total</label>
+											<input type="text" class="form-control" placeholder="2700.16">
+										</div>
+									</div>
+									<div class="mt-3 pt-2">
+										<div class="d-flex mb-2">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Transaction Fees<span class="text-muted ms-1 fs-11">(0.05%)</span></p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">$1.08</h6>
+											</div>
+										</div>
+										<div class="d-flex mb-2">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Minimum Received<span class="text-muted ms-1 fs-11">(2%)</span></p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">$7.85</h6>
+											</div>
+										</div>
+										<div class="d-flex">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Estimated Rate</p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">1 BTC ~ $34572.00</h6>
+											</div>
+										</div>
+									</div>
+									<div class="mt-3 pt-2">
+										<button type="button" class="btn btn-primary w-100">Buy Coin</button>
+									</div>
+								</div>
+							</div><!-- end tabpane -->
+
+							<div class="tab-pane" id="sell-tab" role="tabpanel">
+								<div class="p-3 bg-soft-warning">
+									<div class="float-end ms-2">
+										<h6 class="text-warning mb-0">USD Balance : <span class="text-dark">$12,426.07</span></h6>
+									</div>
+									<h6 class="mb-0 text-danger">Sell Coin</h6>
+								</div>
+								<div class="p-3">
+									<div class="row">
+										<div class="col-6">
+											<div class="mb-3">
+												<label>Currency :</label>
+												<select class="form-select">
+													<option>BTC</option>
+													<option>ETH</option>
+													<option>LTC</option>
+												</select>
+											</div>
+										</div><!-- end col -->
+										<div class="col-6">
+											<div class="mb-3">
+												<label>Email :</label>
+												<input type="email" class="form-control" placeholder="example@email.com">
+											</div>
+										</div><!-- end col -->
+									</div><!-- end row -->
+									<div>
+										<div class="input-group mb-3">
+											<label class="input-group-text">Amount</label>
+											<input type="text" class="form-control" placeholder="0">
+										</div>
+										<div class="input-group mb-3">
+											<label class="input-group-text">Price</label>
+											<input type="text" class="form-control" placeholder="2.045585">
+											<label class="input-group-text">$</label>
+										</div>
+										<div class="input-group mb-0">
+											<label class="input-group-text">Total</label>
+											<input type="text" class="form-control" placeholder="2700.16">
+										</div>
+									</div>
+									<div class="mt-3 pt-2">
+										<div class="d-flex mb-2">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Transaction Fees<span class="text-muted ms-1 fs-11">(0.05%)</span></p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">$1.08</h6>
+											</div>
+										</div>
+										<div class="d-flex mb-2">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Minimum Received<span class="text-muted ms-1 fs-11">(2%)</span></p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">$7.85</h6>
+											</div>
+										</div>
+										<div class="d-flex">
+											<div class="flex-grow-1">
+												<p class="fs-13 mb-0">Estimated Rate</p>
+											</div>
+											<div class="flex-shrink-0">
+												<h6 class="mb-0">1 BTC ~ $34572.00</h6>
+											</div>
+										</div>
+									</div>
+									<div class="mt-3 pt-2">
+										<button type="button" class="btn btn-danger w-100">Sell Coin</button>
+									</div>
+								</div>
+							</div><!-- end tab pane -->
+						</div><!-- end tab pane -->
+					</div><!-- end card body -->
+				</div><!-- end card -->
+			</div><!-- end col -->
+			
+			<div class="col-xl-8"> 
+				<div class="card">
+					<div class="card-header">
+						<!--h4 class="card-title mb-0">Estructura del Programa</h4-->
+						<div class="row">
+							<div class="col-sm-5">
+								<div> 
+									<select class="form-control" 
+									        data-plugin="choices" 
+										    data-choices
+										    data-choices-groups 
+											data-choices-search-false 
+											name="choices-single-default"
+											id="cboBusquedaEscuadron">
+										<option th:each="selector : ${selectorEscuadron}"
+			                            		th:value="${selector.value}"
+											    th:text="${selector.text}"
+											    th:selected="${selector.selected}">
+										</option>
+									</select>
+								</div>
+							</div>  
+									
+							<div class="col-sm-5">
+								<div>
+									<select class="form-control" 
+										    data-plugin="choices" 
+										    data-choices
+											data-choices-search-false 
+											name="choices-single-default"
+											id="cboBusquedaPrograma"> 
+										<option value="">Programa</option>
+									</select>
+								</div>
+							</div>
+						</div>				
+					</div>
+					
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-12">
+								
+								<div id="contenedorPrograma" class="verti-sitemap">
+								</div>
+								
+								<div id="loader" class="py-5 my-5 text-center"style="display: none;">							
+									<div class="spinner-grow text-primary" role="status">
+									    <span class="sr-only">Cargando...</span>
+									</div>
+									<div class="spinner-grow text-primary" role="status">
+									    <span class="sr-only">Cargando...</span>
+									</div>
+									<div class="spinner-grow text-primary" role="status">
+									    <span class="sr-only">Cargando...</span>
+									</div>
+								</div> 
+								<div id="noresult" class="noresult" style="display: none;">
+									<div class="text-center">
+										<lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+										  		   colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+										</lord-icon>
+										<h5 class="mt-2">Disculpa! No se encontraron datos</h5>
+										<p class="text-muted mb-0">
+											La información consultada no ha sido encontrada en nuestra base de datos.
+										</p>
+									</div>
+								</div>
+								
+							</div> 
+						</div>
+					</div>
+				</div>
+				<!--end card--> 
+			</div>
+		</div>
+	</div>
+ 
+	<th:block layout:fragment="pagejs"> 
+		<!-- Programar Mision js -->
+		<script src="/assets/js/pages/pro-programar-mision.init.js"></script>
+
+		<!-- Sweet Alerts js -->
+		<script src="/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+		
+		<!--Notifications js -->
+		<script src="/assets/js/notifications.js"></script>
+
+	</th:block>
+</body>
+
+</html>

@@ -1,6 +1,8 @@
 package pe.mil.fap.repository.bussiness.usp.impl;
  
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
@@ -9,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import pe.mil.fap.common.enums.SeveridadEnum;
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.bussiness.DetalleMisionEntity;
 import pe.mil.fap.entity.bussiness.MisionEntity;   
 import pe.mil.fap.repository.bussiness.usp.inf.MisionUSPRepository;
@@ -19,6 +22,98 @@ public class MisionUSPRepositoryImpl implements MisionUSPRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<MisionEntity> listarMisionesPorIdSubFase(Integer idSubFase) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("mision.listarPorIdSubFase");
+			spq.setParameter("P_ID_SUB_FASE",idSubFase);
+			spq.execute();
+ 
+			List<Object[]> results =  spq.getResultList();
+			List<MisionEntity> lstMisiones = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				MisionEntity mision = new MisionEntity();
+
+				mision.setIdMision(Integer.parseInt(String.valueOf(obj[0])));
+				mision.setIdSubFase(Integer.parseInt(String.valueOf(obj[1])));
+				mision.setIdTipoMision(Integer.parseInt(String.valueOf(obj[2])));
+				mision.setCoCodigo((String) obj[3]);
+				mision.setFlChequeo(Integer.parseInt(String.valueOf(obj[4])));
+				mision.setFlBloqueado(Integer.parseInt(String.valueOf(obj[5])));
+				mision.setFlEstado(Integer.parseInt(String.valueOf(obj[6])));
+				lstMisiones.add(mision);
+			}
+			return lstMisiones;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DetalleMisionEntity> listarDetalleMisionPorIdMision(Integer idMision) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("detalleMision.listarPorIdMision");
+			spq.setParameter("P_ID_MISION",idMision);
+			spq.execute();
+ 
+			List<Object[]> results =  spq.getResultList();
+			List<DetalleMisionEntity> lstDetalles = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				DetalleMisionEntity detalle = new DetalleMisionEntity();
+
+				detalle.setIdDetalleMision(Integer.parseInt(String.valueOf(obj[0])));
+				detalle.setIdMision(Integer.parseInt(String.valueOf(obj[1])));
+				detalle.setIdManiobra(Integer.parseInt(String.valueOf(obj[2])));
+				detalle.setIdEstandarRequerido(Integer.parseInt(String.valueOf(obj[3])));
+				detalle.setNuOrden(Integer.parseInt(String.valueOf(obj[4])));
+				detalle.setFlBloqueado(Integer.parseInt(String.valueOf(obj[5])));
+				detalle.setFlEstado(Integer.parseInt(String.valueOf(obj[6])));
+				lstDetalles.add(detalle);
+			}
+			return lstDetalles;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@Override
+	public Optional<MisionEntity> buscarId(Integer id) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("mision.buscarId");
+			spq.setParameter("P_ID_MISION", id); 
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<MisionEntity> lstMisiones = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				MisionEntity mision = new MisionEntity();
+
+				mision.setIdMision(Integer.parseInt(String.valueOf(obj[0])));
+				mision.setIdSubFase(Integer.parseInt(String.valueOf(obj[1]))); 
+				mision.setIdTipoMision(Integer.parseInt(String.valueOf(obj[2]))); 
+				mision.setCoCodigo((String) obj[3]); 
+				mision.setFlChequeo(Integer.parseInt(String.valueOf(obj[4]))); 
+				mision.setFlBloqueado(Integer.parseInt(String.valueOf(obj[5])));
+				mision.setFlEstado(Integer.parseInt(String.valueOf(obj[6]))); 
+				lstMisiones.add(mision);
+
+			}
+			
+			if (lstMisiones.isEmpty()) { 
+				return Optional.empty();
+			}
+			MisionEntity mision = (MisionEntity) lstMisiones.get(0);
+			return Optional.of(mision);
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
 
 	@Override
 	public Integer insertarCabecera(MisionEntity mision) throws RepositoryException { 

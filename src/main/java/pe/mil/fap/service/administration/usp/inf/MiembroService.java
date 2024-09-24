@@ -10,6 +10,7 @@ import pe.mil.fap.service.exception.ServiceException;
 public interface MiembroService {
 
 	List<MiembroDTO> listarMiembros(Integer nuPeriodo, String noRol) throws ServiceException;
+	List<MiembroDTO> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol) throws ServiceException;
 	Optional<MiembroDTO> buscarPorNsa(String coNsa, Integer nuPeriodo, String noRol) throws ServiceException;
 	Optional<MiembroDTO> buscarPorId(Integer idMiembro) throws ServiceException;
 	MessageDTO guardarInstructor(MiembroDTO dto) throws ServiceException;

@@ -16,6 +16,15 @@ import jakarta.persistence.StoredProcedureParameter;
 import jakarta.persistence.ParameterMode;
 
 @NamedStoredProcedureQueries({
+		@NamedStoredProcedureQuery(name = "programa.listarCalificarPorPeriodo", 
+								   procedureName = "PKG_PROGRAMA.SP_LISTAR_A_CALIFICAR_POR_PERIODO", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_PERIODO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_TIPO_INSTRUCCION", type = String.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
 		@NamedStoredProcedureQuery(name = "programa.listar", 
 								   procedureName = "PKG_PROGRAMA.SP_LISTAR", 
 								   parameters = { 

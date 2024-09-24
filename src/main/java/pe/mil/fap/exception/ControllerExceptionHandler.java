@@ -17,6 +17,15 @@ import pe.mil.fap.service.exception.ServiceException;
 @ControllerAdvice
 @Order(2)
 public class ControllerExceptionHandler {
+
+	@ExceptionHandler({ NotFoundException.class })
+	@ResponseBody
+	public MessageDTO notFoundRequest(Exception exception) {
+		return MessageDTO.builder()
+						 .type(INFO.getValor())
+						 .message(exception.getMessage())  
+						 .build(); 
+	}
 	
 	@ExceptionHandler({ ConflictException.class })
 	@ResponseBody

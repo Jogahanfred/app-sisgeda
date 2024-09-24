@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
- 
+
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.GrupoEntity;
 import pe.mil.fap.entity.bussiness.GrupoMiembroEntity;
 import pe.mil.fap.mappers.bussiness.inf.GrupoMapper;
@@ -68,6 +69,21 @@ public class GrupoServiceImpl implements GrupoService {
 			return lstDTO;
 		} catch (Exception e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Optional<GrupoDTO> buscarId(Integer id) throws ServiceException {
+		try { 
+			Optional<GrupoEntity> optEntity = grupoUSPRepository.buscarId(id);
+			if(!optEntity.isPresent()){ 
+				throw new Exception("Grupo no existe");
+			}
+			GrupoDTO dto = grupoMapper.toDTO(optEntity.get());
+			dto.setLstAlumnos(this.listarDetalle(optEntity.get().getIdGrupo()));
+			return Optional.of(dto);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
 		}
 	}
 

@@ -1,9 +1,13 @@
 package pe.mil.fap.model.administration;
 
-import java.io.Serializable; 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import pe.mil.fap.model.helpers.InscripcionMisionDTO;
 
 public class SubFaseDTO implements Serializable {
 
@@ -49,6 +53,8 @@ public class SubFaseDTO implements Serializable {
 	private Integer idEscuadron;
 	
 	private Integer idBancoFase;
+	
+	private List<InscripcionMisionDTO> lstInscripcionMision;
 
 	public SubFaseDTO(Integer idSubFase,
 			@NotNull(message = "El ID banco sub fase no puede ser vacio") Integer idBancoSubFase,
@@ -209,6 +215,14 @@ public class SubFaseDTO implements Serializable {
 
 	public void setIdBancoFase(Integer idBancoFase) {
 		this.idBancoFase = idBancoFase;
+	}
+
+	public List<InscripcionMisionDTO> getLstInscripcionMision() {
+		return lstInscripcionMision;
+	}
+
+	public void setLstInscripcionMision(List<InscripcionMisionDTO> lstInscripcionMision) {
+		this.lstInscripcionMision = lstInscripcionMision;
 	}
 
 	@Override

@@ -23,7 +23,23 @@ import jakarta.validation.constraints.Size;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class),
 										
 										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_ID_CALIFICACION", type = Integer.class)
-		})
+		}),
+		@NamedStoredProcedureQuery(name = "calificacion.verificarInscripcionMision", 
+								   procedureName = "PKG_CALIFICACION.SP_VERIFICAR_INSCRIPCION_MISION", 
+								   parameters = {  
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_MISION", type = Integer.class), 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_IDS", type = String.class), 
+						
+										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_INSCRIPCION", type = Integer.class)
+		}),
+		@NamedStoredProcedureQuery(name = "calificacion.verificarInscripcionSubFase", 
+								   procedureName = "PKG_CALIFICACION.SP_VERIFICAR_INSCRIPCION_SUB_FASE", 
+								   parameters = {  
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_SUB_FASE", type = Integer.class), 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_IDS", type = String.class), 
+						
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}) 
 })
 
 @Entity(name = "CalificacionEntity")

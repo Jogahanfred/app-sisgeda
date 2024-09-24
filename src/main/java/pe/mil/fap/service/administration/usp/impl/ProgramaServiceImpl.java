@@ -1,6 +1,7 @@
 package pe.mil.fap.service.administration.usp.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import pe.mil.fap.entity.administration.ProgramaEntity;
 import pe.mil.fap.mappers.administration.inf.ProgramaMapper;
 import pe.mil.fap.model.administration.ProgramaDTO;
 import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.ProgramaInscritoDTOResponse;
 import pe.mil.fap.repository.administration.usp.inf.ProgramaUSPRepository;
 import pe.mil.fap.service.administration.usp.inf.ProgramaService;
 import pe.mil.fap.service.exception.ServiceException;
@@ -22,6 +24,27 @@ public class ProgramaServiceImpl implements ProgramaService {
 		super();
 		this.programaMapper = programaMapper;
 		this.programaUSPRepository = programaUSPRepository;
+	}
+
+	@Override
+	public List<ProgramaInscritoDTOResponse> listarProgramasACalificarPorPeriodo(Integer nuPeriodo,
+			String noTipoInstruccion, Integer idMiembro) throws ServiceException {
+		try {
+			List<ProgramaEntity> lstEntity = programaUSPRepository.listarProgramasACalificarPorPeriodo(nuPeriodo, noTipoInstruccion, idMiembro);
+			List<ProgramaInscritoDTOResponse> lstDTO = lstEntity.stream().map(programa -> {
+				ProgramaInscritoDTOResponse dto = new ProgramaInscritoDTOResponse();
+				dto.setIdPrograma(programa.getIdPrograma());
+				dto.setNoNombre(programa.getNoNombre());
+				dto.setNuPeriodo(programa.getNuPeriodo());
+				dto.setTxDescripcion(programa.getTxDescripcion());
+				dto.setTxDescripcionEscuadron(programa.getTxDescripcionEscuadron());
+				dto.setTxFinalidad(programa.getTxFinalidad());
+				return dto;
+			}).collect(Collectors.toList());
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override

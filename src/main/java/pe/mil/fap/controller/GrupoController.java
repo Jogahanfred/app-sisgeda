@@ -1,5 +1,5 @@
 package pe.mil.fap.controller;
-  
+   
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
-import pe.mil.fap.common.constants.Configuracion;
+import pe.mil.fap.common.constants.Configuracion; 
 import pe.mil.fap.model.administration.GrupoDTO;
-import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.MessageDTO; 
 import pe.mil.fap.model.security.UsuarioDTO;
 import pe.mil.fap.service.bussiness.usp.inf.GrupoService;
 
@@ -40,6 +40,7 @@ public class GrupoController {
 		List<GrupoDTO> lstGrupos =  grupoService.listar(nuPeriodo, idUnidad);
 		return lstGrupos;
 	}
+	 
 	
 	@PostMapping("/guardar")
 	@ResponseBody

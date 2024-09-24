@@ -2,6 +2,7 @@ package pe.mil.fap.repository.bussiness.usp.impl;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery; 
 import pe.mil.fap.common.utils.UtilHelpers;
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.GrupoEntity;
 import pe.mil.fap.entity.bussiness.GrupoMiembroEntity;
 import pe.mil.fap.repository.bussiness.usp.inf.GrupoUSPRepository;
@@ -72,6 +74,40 @@ public class GrupoUSPRepositoryImpl implements GrupoUSPRepository {
 				lstDetalle.add(miembro); 
 			}
 			return lstDetalle;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<GrupoEntity> buscarId(Integer id) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("grupo.buscarId");
+			spq.setParameter("P_ID_GRUPO", id); 
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<GrupoEntity> lstGrupos = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				GrupoEntity grupo = new GrupoEntity();
+
+				grupo.setIdGrupo(Integer.parseInt(String.valueOf(obj[0])));
+				grupo.setIdUnidad(Integer.parseInt(String.valueOf(obj[1])));
+				grupo.setCoCodigo((String) obj[2]);
+				grupo.setNoNombre((String) obj[3]); 
+				grupo.setNoSituacion(String.valueOf(obj[4]));
+				grupo.setNuPeriodo(Integer.parseInt(String.valueOf(obj[5]))); 
+				lstGrupos.add(grupo); 
+
+			}
+			
+			if (lstGrupos.isEmpty()) { 
+				return Optional.empty();
+			}
+			GrupoEntity grupo = (GrupoEntity) lstGrupos.get(0);
+			return Optional.of(grupo);
 		} catch (Exception e) {
 			throw new RepositoryException(e);
 		}

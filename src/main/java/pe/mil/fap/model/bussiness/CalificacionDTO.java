@@ -1,6 +1,7 @@
 package pe.mil.fap.model.bussiness;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
  
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +38,7 @@ public class CalificacionDTO implements Serializable {
 
 	private String txRecomendacion;
  
-	private List<DetalleCalificacionDTO> lstDetalleCalificacion;
+	private List<DetalleCalificacionDTO> lstDetalleCalificacion = new ArrayList<>();
 
 	public CalificacionDTO(Integer idCalificacion, @NotNull(message = "La mision no puede ser vacio") Integer idMision,
 			Integer idAeronave, @NotNull(message = "El calificado  no puede ser vacia") Integer idCalificado,

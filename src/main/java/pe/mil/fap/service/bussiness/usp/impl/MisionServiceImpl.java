@@ -3,13 +3,16 @@ package pe.mil.fap.service.bussiness.usp.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
-
+ 
+import pe.mil.fap.entity.bussiness.MisionEntity;
 import pe.mil.fap.exception.BadRequestException;
 import pe.mil.fap.exception.ConflictException;
-import pe.mil.fap.mappers.bussiness.inf.MisionMapper;
+import pe.mil.fap.mappers.bussiness.inf.DetalleMisionMapper;
+import pe.mil.fap.mappers.bussiness.inf.MisionMapper; 
 import pe.mil.fap.model.bussiness.DetalleMisionDTO;
 import pe.mil.fap.model.bussiness.MisionDTO;
 import pe.mil.fap.model.helpers.MessageDTO;
@@ -24,11 +27,44 @@ public class MisionServiceImpl implements MisionService {
 
 	private final MisionUSPRepository misionUSPRepository;
 	private final MisionMapper misionMapper;
+	private final DetalleMisionMapper detalleMisionMapper;
 
-	public MisionServiceImpl(MisionUSPRepository misionUSPRepository, MisionMapper misionMapper) {
+	public MisionServiceImpl(final MisionUSPRepository misionUSPRepository, 
+							 final MisionMapper misionMapper,
+							 final DetalleMisionMapper detalleMisionMapper) {
 		super();
 		this.misionUSPRepository = misionUSPRepository;
 		this.misionMapper = misionMapper;
+		this.detalleMisionMapper = detalleMisionMapper;
+	}
+
+	@Override
+	public List<MisionDTO> listarMisionesPorIdSubFase(Integer idSubFase) throws ServiceException {
+		try {
+			List<MisionEntity> lstEntity = misionUSPRepository.listarMisionesPorIdSubFase(idSubFase); 
+			List<MisionDTO> lstDTO = misionMapper.toDTOList(lstEntity);
+			lstDTO.forEach(mision -> {
+				mision.setLstDetalleMision(detalleMisionMapper.toDTOList(misionUSPRepository.listarDetalleMisionPorIdMision(mision.getIdMision())));
+			});
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Optional<MisionDTO> buscarId(Integer id) throws ServiceException {
+		try { 
+			Optional<MisionEntity> optEntity = misionUSPRepository.buscarId(id);
+			if(!optEntity.isPresent()){ 
+				throw new Exception("Mision no existe");
+			}
+			MisionDTO dto = misionMapper.toDTO(optEntity.get());
+			dto.setLstDetalleMision(detalleMisionMapper.toDTOList(misionUSPRepository.listarDetalleMisionPorIdMision(id)));
+			return Optional.of(dto);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	@Override 

@@ -18,7 +18,38 @@ public class MiembroUSPRepositoryImpl implements MiembroUSPRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<MiembroEntity> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol)
+			throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("miembro.listarCalificarPorPeriodo");
+			spq.setParameter("P_ROL", noRol.toUpperCase());
+			spq.setParameter("P_PERIODO", nuPeriodo);
+			spq.execute();
  
+			List<Object[]> results =  spq.getResultList();
+			List<MiembroEntity> lstMiembros = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				MiembroEntity miembro = new MiembroEntity();
+
+				miembro.setIdMiembro(Integer.parseInt(String.valueOf(obj[0])));
+				miembro.setIdUnidad(Integer.parseInt(String.valueOf(obj[1])));
+				miembro.setCoNsa((String) obj[2]);
+				miembro.setNuPeriodo(Integer.parseInt(String.valueOf(obj[3])));
+				miembro.setFlBloqueado(Integer.parseInt(String.valueOf(obj[4])));
+				miembro.setFlEstado(Integer.parseInt(String.valueOf(obj[5])));
+				lstMiembros.add(miembro);
+
+			}
+			return lstMiembros;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MiembroEntity> listarMiembros(Integer nuPeriodo, String noRol) throws RepositoryException {

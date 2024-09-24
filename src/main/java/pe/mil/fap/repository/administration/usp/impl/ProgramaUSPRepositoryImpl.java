@@ -21,6 +21,38 @@ public class ProgramaUSPRepositoryImpl implements ProgramaUSPRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<ProgramaEntity> listarProgramasACalificarPorPeriodo(Integer nuPeriodo, String noTipoInstruccion,
+			Integer idMiembro) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("programa.listarCalificarPorPeriodo");
+			spq.setParameter("P_PERIODO", nuPeriodo);
+			spq.setParameter("P_ID_CALIFICADO", idMiembro);
+			spq.setParameter("P_TIPO_INSTRUCCION", noTipoInstruccion);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<ProgramaEntity> lstPrograma = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				ProgramaEntity programa = new ProgramaEntity();
+
+				programa.setIdPrograma(Integer.parseInt(String.valueOf(obj[0])));
+				programa.setNoNombre((String) obj[1]);
+				programa.setTxDescripcionEscuadron((String) obj[2]);
+				programa.setNuPeriodo(Integer.parseInt(String.valueOf(obj[3])));
+				programa.setTxDescripcion((String) obj[4]);
+				programa.setTxFinalidad((String) obj[5]);
+				lstPrograma.add(programa);
+
+			}
+			return lstPrograma;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<ProgramaEntity> listarProgramas() throws RepositoryException {
 		try {
 			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("programa.listar");

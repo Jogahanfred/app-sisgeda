@@ -1,6 +1,7 @@
 package pe.mil.fap.entity.bussiness;
 
-import java.io.Serializable; 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -26,7 +27,20 @@ import jakarta.validation.constraints.Size;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_CHEQUEO", type = Integer.class),
 										
 										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_ID_MISION", type = Integer.class)
-		})
+		}),
+		@NamedStoredProcedureQuery(name = "mision.listarPorIdSubFase", 
+								   procedureName = "PKG_MISION.SP_LISTAR_POR_SUB_FASE", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_SUB_FASE", type = Integer.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}),  
+		@NamedStoredProcedureQuery(name = "mision.buscarId", 
+								   procedureName = "PKG_MISION.SP_BUSCAR_ID", 
+								   parameters = {
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_MISION", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class) 
+		}),
 })
 
 @Entity(name = "MisionEntity")
@@ -62,7 +76,7 @@ public class MisionEntity implements Serializable{
 	private Integer flEstado;
 	
 	@Transient
-	private List<DetalleMisionEntity> lstDetalleMision;
+	private List<DetalleMisionEntity> lstDetalleMision = new ArrayList<>();
 
 	public MisionEntity(Integer idMision, @NotNull(message = "La sub fase no puede ser vacia") Integer idSubFase,
 			@NotNull(message = "El tipo de misión no puede ser vacio") Integer idTipoMision,

@@ -31,7 +31,14 @@ import jakarta.validation.constraints.NotNull;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_ESTANDAR", type = Integer.class), 
 										
 										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_MENSAJE", type = String.class)
-})		
+		}), 
+		@NamedStoredProcedureQuery(name = "detalleMision.listarPorIdMision", 
+								   procedureName = "PKG_DETALLE_MISION.SP_LISTAR_POR_ID_MISION", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_MISION", type = Integer.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
 })
 @Entity(name = "DetalleMisionEntity")
 @Table(name = "TBL_DETALLE_MISION")

@@ -31,6 +31,23 @@ public class MiembroServiceImpl implements MiembroService {
 	}
 
 	@Override
+	public List<MiembroDTO> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol)
+			throws ServiceException {
+		try {
+			List<MiembroEntity> lstEntity = miembroUSPRepository.listarMiembrosACalificarPorPeriodo(nuPeriodo, noRol); 
+			List<MiembroDTO> lstDTO = miembroMapper.toListDTO(lstEntity);
+			if (!lstDTO.isEmpty()) {
+				for (MiembroDTO miembro : lstDTO) {
+					miembro.setPersonal(personalService.buscarPorNsa(miembro.getCoNsa()).get());
+				}
+			}
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
 	public List<MiembroDTO> listarMiembros(Integer nuPeriodo, String noRol) throws ServiceException {
 		try {
 			List<MiembroEntity> lstEntity = miembroUSPRepository.listarMiembros(nuPeriodo, noRol); 

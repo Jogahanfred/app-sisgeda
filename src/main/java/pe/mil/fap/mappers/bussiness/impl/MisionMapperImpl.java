@@ -5,10 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import pe.mil.fap.entity.administration.FaseEntity;
 import pe.mil.fap.entity.bussiness.DetalleMisionEntity;
 import pe.mil.fap.entity.bussiness.MisionEntity;
 import pe.mil.fap.mappers.bussiness.inf.DetalleMisionMapper;
 import pe.mil.fap.mappers.bussiness.inf.MisionMapper;
+import pe.mil.fap.model.administration.FaseDTO;
 import pe.mil.fap.model.bussiness.DetalleMisionDTO;
 import pe.mil.fap.model.bussiness.MisionDTO;
 
@@ -60,5 +62,12 @@ public class MisionMapperImpl implements MisionMapper{
 	            .collect(Collectors.toList());
 	}
 
+	@Override
+	public List<MisionDTO> toDTOList(List<MisionEntity> entityList) { 
+		return entityList.stream()
+						 .map(this::toDTO)
+				         .collect(Collectors.toList());
+		
+	}
 
 }

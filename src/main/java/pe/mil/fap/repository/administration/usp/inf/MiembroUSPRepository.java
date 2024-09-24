@@ -9,6 +9,7 @@ import pe.mil.fap.repository.exception.RepositoryException;
 public interface MiembroUSPRepository {
 
 	List<MiembroEntity> listarMiembros(Integer nuPeriodo, String noRol) throws RepositoryException;
+	List<MiembroEntity> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol) throws RepositoryException;
 	Optional<MiembroEntity> buscarPorNsa(String coNsa, Integer nuPeriodo, String noRol) throws RepositoryException;
 	Optional<MiembroEntity> buscarPorId(Integer idMiembro) throws RepositoryException;
 	String guardarInstructor(MiembroEntity entity) throws RepositoryException;			

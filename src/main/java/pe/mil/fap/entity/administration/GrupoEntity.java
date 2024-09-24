@@ -25,7 +25,14 @@ import pe.mil.fap.entity.bussiness.GrupoMiembroEntity;
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_UNIDAD", type = Integer.class), 
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-	}), 
+	}),
+	@NamedStoredProcedureQuery(name = "grupo.buscarId", 
+							   procedureName = "PKG_GRUPO.SP_BUSCAR_ID", 
+							   parameters = {
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_GRUPO", type = Integer.class),
+									
+									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class) 
+	}),
 	@NamedStoredProcedureQuery(name = "grupo.insertar", 
 							   procedureName = "PKG_GRUPO.SP_INSERTAR", 
 							   parameters = {						

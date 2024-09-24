@@ -8,6 +8,7 @@
 </th:block>
 
 <head>
+	<link href="/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -15,19 +16,26 @@
 
 		<div th:replace="partials/page-title :: page-title('Programar Misión','Proceso')"></div>
 
-		<div class="row g-4 mb-3">
+		<div class="row g-4">
 			
-			<div class="col-sm-auto">
-				<div> 
+			<div class="d-lg-flex align-items-center mb-4">
+				<div class="flex-grow-1"> 
 					
-					<button id="addBtn"
-							type="button" 
+					<button type="button" 
 							class="btn btn-primary">
 					   <i class="ri-add-line align-bottom me-1"></i> 
-					   Registrar Grupo
+					   Matricular en el Programa
 					</button>
 
 				</div>
+				<div class="flex-shrink-0 mt-4 mt-lg-0">				
+			 		<div class="m-2 alert border-0 alert-info material-shadow" 
+						 role="alert">
+						<strong>Debe tener </strong>seleccionado<b>, Grupo o Instructor</b> — para poder elegir el programa que desea iniciar!
+					</div>
+				</div>
+				
+
 			</div>
 			 
 		</div>
@@ -40,22 +48,22 @@
 						<div class="flex-shrink-0">
 							<ul class="nav justify-content-end nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link active" data-bs-toggle="tab" href="#buy-tab" role="tab" aria-selected="false">Grupal</a>
+									<a class="nav-link active" data-bs-toggle="tab" href="#grupal-tab" role="tab" aria-selected="false">Grupal</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#sell-tab" role="tab" aria-selected="true">Individual</a>
+									<a class="nav-link" data-bs-toggle="tab" href="#individual-tab" role="tab" aria-selected="true">Individual</a>
 								</li>
 							</ul><!-- end ul -->
 						</div>
 					</div><!-- end cardheader -->
 					<div class="card-body p-0">
 						<div class="tab-content p-0">
-							<div class="tab-pane active" id="buy-tab" role="tabpanel">
+							<div class="tab-pane active" id="grupal-tab" role="tabpanel">
 								<div class="p-3 bg-soft-warning">
 									<div class="float-end ms-2">
-										<h6 class="text-warning mb-0">Grupos : <span class="text-dark">4 registros</span></h6>
+										<h6 class="text-warning mb-0">Cantidad : <span id="contador-grupos" class="text-dark">0 Grupos</span></h6>
 									</div>
-									<h6 class="mb-0 text-danger">Buy Coin</h6>
+									<h6 class="mb-0 text-danger">Vista rápida</h6>
 								</div>
 								<div class="p-3">
 									<div class="row">
@@ -65,8 +73,8 @@
 												<select class="form-control"  
 												        data-choices
 														data-choices-search-false 
-														name="cboPeriodo-field"
-														id="cboPeriodo-field">
+														name="cboGrupalPeriodo"
+														id="cboGrupalPeriodo">
 							   		   				  <option th:each="periodo : ${selectorPeriodo}"
 							                    			  th:value="${periodo.value}"
 															  th:text="${periodo.text}"
@@ -74,149 +82,145 @@
 													  </option>
 												</select> 
 											</div>
-										</div><!-- end col -->
+										</div>
 										<div class="col-6">
 											<div class="mb-3">
-												<label>Payment Method :</label>
-												<select class="form-select">
-													<option>Wallet Balance</option>
-													<option>Credit / Debit Card</option>
-													<option>PayPal</option>
-													<option>Payoneer</option>
-												</select>
+												<label>Grupo :</label>
+												<select class="form-control"  
+												        data-choices
+														data-choices-search-false 
+														name="cboGrupo"
+														id="cboGrupo">
+													<option value="">Grupos</option>							                    		
+												</select> 
 											</div>
-										</div><!-- end col -->
-									</div><!-- end row -->
-									<div>
-										<div class="input-group mb-3">
-											<label class="input-group-text">Amount</label>
-											<input type="text" class="form-control" placeholder="0">
-										</div>
-
-										<div class="input-group mb-3">
-											<label class="input-group-text">Price</label>
-											<input type="text" class="form-control" placeholder="2.045585">
-											<label class="input-group-text">$</label>
-										</div>
-
-										<div class="input-group mb-0">
-											<label class="input-group-text">Total</label>
-											<input type="text" class="form-control" placeholder="2700.16">
 										</div>
 									</div>
+									 
+									
+									<div class="card">
+										<div class="card-header align-items-center d-flex border-bottom-dashed">
+											<h4 class="card-title mb-0 flex-grow-1">Miembros</h4>
+											<div class="flex-shrink-0">
+												<button style="cursor: default;" 
+														type="button" 
+														class="btn btn-soft-danger btn-sm shadow-none">
+													<i class="ri-team-fill me-1 align-bottom"></i>
+													<span id="contador-alumnos">0 Alumnos</span>
+												</button>
+											</div>
+										</div>
+										<div id="alert-contador-alumnos" 
+											 class="m-2 alert border-0 alert-primary material-shadow" 
+											 role="alert">
+										    <strong> Hola! </strong> Este grupo<b>, no cuenta con alumnos</b> — registrados!
+										</div>
+											
+										<div id="content-card-alumnos" class="card-body" style="display:  none;">
+											<div data-simplebar 
+												 style="height: 235px;" 
+												 class="mx-n3 px-3">
+												<div id="content-item-alumno" class="vstack gap-3"></div>  
+											</div>
+										</div>
+									</div>
+									 
 									<div class="mt-3 pt-2">
 										<div class="d-flex mb-2">
 											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Transaction Fees<span class="text-muted ms-1 fs-11">(0.05%)</span></p>
+												<p class="fs-13 mb-0">Efectivos<span class="text-muted ms-1 fs-11">(Totalidad del proceso)</span></p>
 											</div>
 											<div class="flex-shrink-0">
-												<h6 class="mb-0">$1.08</h6>
+												<h6 id="contador-efectivos-alumnos" class="mb-0">0</h6>
 											</div>
 										</div>
 										<div class="d-flex mb-2">
 											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Minimum Received<span class="text-muted ms-1 fs-11">(2%)</span></p>
+												<p class="fs-13 mb-0">Descuentos<span class="text-muted ms-1 fs-11">(Causal baja)</span></p>
 											</div>
 											<div class="flex-shrink-0">
-												<h6 class="mb-0">$7.85</h6>
+												<h6 id="contador-descuentos-alumnos" class="mb-0">0</h6>
 											</div>
 										</div>
 										<div class="d-flex">
 											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Estimated Rate</p>
+												<p class="fs-13 mb-0">Disponibles</p>
 											</div>
 											<div class="flex-shrink-0">
-												<h6 class="mb-0">1 BTC ~ $34572.00</h6>
+												<h6 id="contador-disponibles-alumnos" class="mb-0">0</h6>
 											</div>
 										</div>
 									</div>
 									<div class="mt-3 pt-2">
-										<button type="button" class="btn btn-primary w-100">Buy Coin</button>
+										<button id="btn-grupo-seleccionado" type="button" class="btn btn-primary w-100">Selecciona Grupo</button>
 									</div>
 								</div>
-							</div><!-- end tabpane -->
+							</div>
 
-							<div class="tab-pane" id="sell-tab" role="tabpanel">
+							<div class="tab-pane" id="individual-tab" role="tabpanel">
 								<div class="p-3 bg-soft-warning">
 									<div class="float-end ms-2">
-										<h6 class="text-warning mb-0">USD Balance : <span class="text-dark">$12,426.07</span></h6>
+										<h6 class="text-warning mb-0">Cantidad : <span id="contador-instructores" class="text-dark">0 Instructores</span></h6>
 									</div>
-									<h6 class="mb-0 text-danger">Sell Coin</h6>
+									<h6 class="mb-0 text-danger">Vista rápida</h6>
 								</div>
 								<div class="p-3">
 									<div class="row">
 										<div class="col-6">
 											<div class="mb-3">
-												<label>Currency :</label>
-												<select class="form-select">
-													<option>BTC</option>
-													<option>ETH</option>
-													<option>LTC</option>
-												</select>
+												<label>Periodo :</label>
+												<select class="form-control"  
+												        data-choices
+														data-choices-search-false 
+														name="cboIndividualPeriodo"
+														id="cboIndividualPeriodo">
+							   		   				  <option th:each="periodo : ${selectorPeriodo}"
+							                    			  th:value="${periodo.value}"
+															  th:text="${periodo.text}"
+															  th:selected="${periodo.selected}">
+													  </option>
+												</select> 
 											</div>
-										</div><!-- end col -->
-										<div class="col-6">
-											<div class="mb-3">
-												<label>Email :</label>
-												<input type="email" class="form-control" placeholder="example@email.com">
-											</div>
-										</div><!-- end col -->
-									</div><!-- end row -->
-									<div>
-										<div class="input-group mb-3">
-											<label class="input-group-text">Amount</label>
-											<input type="text" class="form-control" placeholder="0">
-										</div>
-										<div class="input-group mb-3">
-											<label class="input-group-text">Price</label>
-											<input type="text" class="form-control" placeholder="2.045585">
-											<label class="input-group-text">$</label>
-										</div>
-										<div class="input-group mb-0">
-											<label class="input-group-text">Total</label>
-											<input type="text" class="form-control" placeholder="2700.16">
-										</div>
+										</div> 
 									</div>
-									<div class="mt-3 pt-2">
-										<div class="d-flex mb-2">
-											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Transaction Fees<span class="text-muted ms-1 fs-11">(0.05%)</span></p>
-											</div>
-											<div class="flex-shrink-0">
-												<h6 class="mb-0">$1.08</h6>
-											</div>
+	
+									<div class="card">
+										<div class="card-header align-items-center d-flex border-bottom-dashed">
+											<h4 class="card-title mb-0 flex-grow-1">Instructores</h4> 
 										</div>
-										<div class="d-flex mb-2">
-											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Minimum Received<span class="text-muted ms-1 fs-11">(2%)</span></p>
-											</div>
-											<div class="flex-shrink-0">
-												<h6 class="mb-0">$7.85</h6>
-											</div>
+										<div id="alert-contador-instructores" 
+											 class="m-2 alert border-0 alert-primary material-shadow" 
+											 role="alert">
+										    <strong> Hola! </strong> Este periodo<b>, no cuenta con instructores</b> — registrados!
 										</div>
-										<div class="d-flex">
-											<div class="flex-grow-1">
-												<p class="fs-13 mb-0">Estimated Rate</p>
-											</div>
-											<div class="flex-shrink-0">
-												<h6 class="mb-0">1 BTC ~ $34572.00</h6>
+											
+										<div id="content-card-instructores" class="card-body" style="display:  none;">
+											<div data-simplebar 
+												 style="height: 235px;" 
+												 class="mx-n3 px-3">
+												<div id="content-item-instructor" class="vstack gap-3"></div>  
 											</div>
 										</div>
 									</div>
+ 
 									<div class="mt-3 pt-2">
-										<button type="button" class="btn btn-danger w-100">Sell Coin</button>
+										<button id="btn-instructor-seleccionado" type="button" class="btn btn-danger w-100">Selecciona Instructor</button>
 									</div>
 								</div>
-							</div><!-- end tab pane -->
-						</div><!-- end tab pane -->
-					</div><!-- end card body -->
-				</div><!-- end card -->
-			</div><!-- end col -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
 			
 			<div class="col-xl-8"> 
 				<div class="card">
-					<div class="card-header">
-						<!--h4 class="card-title mb-0">Estructura del Programa</h4-->
+					<div class="card-header"> 
 						<div class="row">
 							<div class="col-sm-5">
 								<div> 
@@ -255,9 +259,15 @@
 						<div class="row">
 							<div class="col-sm-12">
 								
-								<div id="contenedorPrograma" class="verti-sitemap">
+								<div id="contenedorPrograma">
 								</div>
 								
+								<div id="alert-contenedor-programa" 
+									 class="m-2 alert border-0 alert-primary material-shadow" 
+									 role="alert" >
+								    <strong> Aún </strong> no se ha realizado la <b> búsqueda</b> !
+								</div>
+										
 								<div id="loader" class="py-5 my-5 text-center"style="display: none;">							
 									<div class="spinner-grow text-primary" role="status">
 									    <span class="sr-only">Cargando...</span>
@@ -269,12 +279,13 @@
 									    <span class="sr-only">Cargando...</span>
 									</div>
 								</div> 
+								
 								<div id="noresult" class="noresult" style="display: none;">
 									<div class="text-center">
 										<lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
 										  		   colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
 										</lord-icon>
-										<h5 class="mt-2">Disculpa! No se encontraron datos</h5>
+										<h5 class="mt-2">Disculpa! No se encontró la estructura de un programa</h5>
 										<p class="text-muted mb-0">
 											La información consultada no ha sido encontrada en nuestra base de datos.
 										</p>
@@ -284,12 +295,54 @@
 							</div> 
 						</div>
 					</div>
-				</div>
-				<!--end card--> 
+				</div> 
 			</div>
-		</div>
+			 
+
+		</div> 
+		
+		
+		<div class="modal fade zoomIn" id="mdConfirmacion" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" 
+							    class="btn-close" 
+							    id="deleteRecord-close"
+								data-bs-dismiss="modal" 
+								aria-label="Close">
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="mt-2 text-center"> 
+							<lord-icon src="https://cdn.lordicon.com/wwweikvd.json" 
+									   trigger="loop"
+		    						   delay="2000"
+		    						   colors="primary:#0a2e5c,secondary:#2516c7"	
+									   style="width:100px;height:100px">
+							</lord-icon>
+							<div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5"> 
+								<div class="col-xl-12">
+									<div class="mt-4">
+										<h5 class="fs-18">¿En cuál misión desea inscribirse?</h5>
+										<div id="content-misiones"> 
+											 
+										</div>
+									</div>
+								</div>
+								<h4>¿Estas seguro?</h4>
+								<p id="msgConfirmacion" class="text-muted mx-4 mb-0"></p>
+							</div>
+						</div> 
+					</div>
+				</div>
+			</div>
+		</div>  
+		
+		
 	</div>
- 
+	
+	 
 	<th:block layout:fragment="pagejs"> 
 		<!-- Programar Mision js -->
 		<script src="/assets/js/pages/pro-programar-mision.init.js"></script>

@@ -1,3 +1,7 @@
+const GLOBAL = {
+	idDetalleCalificacion: null
+}
+
 renderizarLista();
 
 async function renderizarLista() {
@@ -185,19 +189,19 @@ document.addEventListener("click", async function(event) {
 
 		const idManiobra = event.target.closest('.avatar-btn').dataset.idManiobra;
 		const idCalificacion = event.target.closest('.avatar-btn').dataset.idCalificacion;
-		const idDetalleCalificacion = event.target.closest('.avatar-btn').dataset.idDetalleCalificacion;
 		// Puedes usar estas variables para realizar más acciones
+		GLOBAL.idDetalleCalificacion = event.target.closest('.avatar-btn').dataset.idDetalleCalificacion;
 
-
-		console.log("ID Maniobra:", idManiobra, "ID Calificación:", idCalificacion, "idDetalleCalificacion: ", idDetalleCalificacion);
+		console.log("GLOBAL: ", GLOBAL.idDetalleCalificacion)
+ 
 		try {
 			const [lstRestricciones, lstCOR] = await Promise.all([
-				fetchListarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion),
-				fetchListarCORPorIdDetalleCalificacion(idDetalleCalificacion)
+				fetchListarRestriccionesPorIdDetalleCalificacion(GLOBAL.idDetalleCalificacion),
+				fetchListarCORPorIdDetalleCalificacion(GLOBAL.idDetalleCalificacion)
 			]);
 			console.log("LISTA: ", lstRestricciones);
 			console.log("lstCOR: ", lstCOR);
-			renderizarRestricciones(lstRestricciones, idDetalleCalificacion)
+			renderizarRestricciones(lstRestricciones)
 			renderizarCOR(lstCOR)
 
 
@@ -218,8 +222,8 @@ function renderizarCOR(lstCor) {
 		document.getElementById('content-card-cor').style.display = 'block';
 		// Si hay restricciones, iterar y mostrarlas
 		lstCor.forEach(cor => {
-			const corDiv = document.createElement('div'); 
-			corDiv.classList.add('p-2', 'my-2', 'rounded','border','border-dashed');
+			const corDiv = document.createElement('div');
+			corDiv.classList.add('p-2', 'my-2', 'rounded', 'border', 'border-dashed');
 
 			corDiv.innerHTML = `
 				       <div class="pt-1 acitivity-item d-flex">
@@ -288,7 +292,7 @@ function renderizarCOR(lstCor) {
 
 }
 
-function renderizarRestricciones(lstRestricciones, idDetalleCalificacion) {
+function renderizarRestricciones(lstRestricciones) {
 	// Limpiar el contenedor antes de añadir contenido
 	const restriccionesContainer = document.getElementById('content-restricciones');
 	restriccionesContainer.innerHTML = '';
@@ -303,7 +307,6 @@ function renderizarRestricciones(lstRestricciones, idDetalleCalificacion) {
 			button.style.cursor = 'pointer';
 			button.dataset.idRestriccionEstandar = restriccion.idRestriccionEstandar;
 			button.dataset.txMensaje = restriccion.txMensaje;
-			button.dataset.idDetalleCalificacion = idDetalleCalificacion;
 
 			button.innerHTML = `
 				        <div class="card-body">
@@ -336,7 +339,7 @@ function renderizarRestricciones(lstRestricciones, idDetalleCalificacion) {
 			button.addEventListener('click', () => {
 				const idRestriccionEstandar = button.dataset.idRestriccionEstandar;
 				const txMensaje = button.dataset.txMensaje;
-				const idDetalleCalificacion = button.dataset.idDetalleCalificacion;
+				//const idDetalleCalificacion = button.dataset.idDetalleCalificacion;
 				console.log("ID Restricción Estandar:", idRestriccionEstandar);
 
 				document.getElementById('txtarea-causa').innerText = txMensaje;
@@ -399,13 +402,19 @@ document.getElementById('btnGuardarCalificacion').addEventListener('click', asyn
 	}
 
 	try {
-		const response = await fetchRegistrarCor(24484, txtCausa, txtObservacion, txtRecomendacion);
+		const response = await fetchRegistrarCor(GLOBAL.idDetalleCalificacion, txtCausa, txtObservacion, txtRecomendacion);
 		const { type, message } = response;
 		notification(type, message);
 		if (SYSTEM.Constants.SweetAlert.TypeMessage.Success == type) {
 			document.getElementById('txtarea-causa').value = '';
 			document.getElementById('txtarea-observacion').value = '';
 			document.getElementById('txtarea-recomendacion').value = '';
+			try {
+				const lstCOR = await fetchListarCORPorIdDetalleCalificacion(GLOBAL.idDetalleCalificacion) 
+				renderizarCOR(lstCOR)
+			} catch (error) {
+				console.error('Error al listar COR :', error);
+			}
 		}
 	} catch (error) {
 		console.error('Error al registrar cor:', error);

@@ -1,0 +1,48 @@
+[33mcommit 4d7d837c3855209d97cd9400b6dbd772d2f14224[m[33m ([m[1;36mHEAD -> [m[1;32muser-laptop[m[33m, [m[1;31morigin/user-laptop[m[33m)[m
+Author: = <=>
+Date:   Fri Oct 18 10:49:21 2024 -0500
+
+    Modificacion de mision calificar
+
+[33mcommit 9bbd80d48a6ef3830f8a8688704beb1fe2032fbc[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: = <=>
+Date:   Fri Oct 18 10:37:03 2024 -0500
+
+    Primer Commit
+
+[33mcommit 208dbb02a2c849ed9d7d75cf2bc09cf14ef2ea9f[m
+Merge: f848bc7 ce16b97
+Author: = <=>
+Date:   Fri Oct 18 09:47:14 2024 -0500
+
+    Merge branch 'main' of https://github.com/Jogahanfred/sisgeda
+
+[33mcommit f848bc7fc5edcd86278aed14d0a42e59f59b1ea4[m
+Author: = <=>
+Date:   Fri Oct 18 00:02:43 2024 -0500
+
+    Calificacion de Mision-Archivo dañado recuperado
+
+[33mcommit ce16b97ef22ead2a18497976125dc829f643a185[m
+Author: = <=>
+Date:   Fri Oct 18 00:02:43 2024 -0500
+
+    Calificacion de Mision-Archivo dañado recuperado
+
+[33mcommit 82da5acedb725aa7223481898f449ad8ebde94eb[m[33m ([m[1;32mv1-laptop[m[33m)[m
+Author: = <=>
+Date:   Tue Sep 24 10:35:04 2024 -0500
+
+    Se agrego comentario para prueba de registro
+
+[33mcommit a99d9fb8795eb7061ca5117bc2a5677ee01dfbd7[m
+Author: = <=>
+Date:   Tue Sep 24 10:12:52 2024 -0500
+
+    Primer commit - Proyecto (Portal - Programas)
+
+[33mcommit ba7c7f2f508d678bd83e163a3bc76318c48a861e[m
+Author: = <=>
+Date:   Mon Sep 16 08:58:56 2024 -0500
+
+    Primer commit

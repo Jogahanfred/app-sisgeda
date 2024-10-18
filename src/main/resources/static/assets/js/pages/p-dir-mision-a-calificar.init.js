@@ -191,26 +191,40 @@ document.addEventListener("click", async function(event) {
 
 		console.log("ID Maniobra:", idManiobra, "ID Calificación:", idCalificacion, "idDetalleCalificacion: ", idDetalleCalificacion);
 		try {
-			const lstRestricciones = await fetchListarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion);
+			const [lstRestricciones, lstCOR] = await Promise.all([
+				fetchListarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion),
+				fetchListarCORPorIdDetalleCalificacion(idDetalleCalificacion)
+			]);
 			console.log("LISTA: ", lstRestricciones);
+			console.log("lstCOR: ", lstCOR);
+			renderizarRestricciones(lstRestricciones)
 
-			// Limpiar el contenedor antes de añadir contenido
-			const restriccionesContainer = document.getElementById('content-restricciones');
-			restriccionesContainer.innerHTML = '';
 
-			if (lstRestricciones && lstRestricciones.length > 0) {
-				document.getElementById('alert-sin-restricciones').style.display = 'none'
-				document.getElementById('content-card-restricciones').style.display = 'block';
-				// Si hay restricciones, iterar y mostrarlas
-				lstRestricciones.forEach(restriccion => {
-					const button = document.createElement('div');
-					button.classList.add('card', 'border', 'border-dashed', 'shadow-none');
-					button.style.cursor = 'pointer';
-					button.dataset.idRestriccionEstandar = restriccion.idRestriccionEstandar;
-					button.dataset.txMensaje = restriccion.txMensaje;
-					button.dataset.idDetalleCalificacion = idDetalleCalificacion;
 
-					button.innerHTML = `
+		} catch (error) {
+			console.error('Error al listar restricciones :', error);
+		}
+	}
+});
+
+function renderizarRestricciones(lstRestricciones) {
+	// Limpiar el contenedor antes de añadir contenido
+	const restriccionesContainer = document.getElementById('content-restricciones');
+	restriccionesContainer.innerHTML = '';
+
+	if (lstRestricciones && lstRestricciones.length > 0) {
+		document.getElementById('alert-sin-restricciones').style.display = 'none'
+		document.getElementById('content-card-restricciones').style.display = 'block';
+		// Si hay restricciones, iterar y mostrarlas
+		lstRestricciones.forEach(restriccion => {
+			const button = document.createElement('div');
+			button.classList.add('card', 'border', 'border-dashed', 'shadow-none');
+			button.style.cursor = 'pointer';
+			button.dataset.idRestriccionEstandar = restriccion.idRestriccionEstandar;
+			button.dataset.txMensaje = restriccion.txMensaje;
+			button.dataset.idDetalleCalificacion = idDetalleCalificacion;
+
+			button.innerHTML = `
 				        <div class="card-body">
 				            <div class="d-flex">
 				                <div class="flex-shrink-0">
@@ -237,27 +251,27 @@ document.addEventListener("click", async function(event) {
 				        </div>
 				    `;
 
-					// Añadir evento de clic al botón
-					button.addEventListener('click', () => {
-						const idRestriccionEstandar = button.dataset.idRestriccionEstandar;
-						const txMensaje = button.dataset.txMensaje;
-						const idDetalleCalificacion = button.dataset.idDetalleCalificacion;
-						console.log("ID Restricción Estandar:", idRestriccionEstandar);
+			// Añadir evento de clic al botón
+			button.addEventListener('click', () => {
+				const idRestriccionEstandar = button.dataset.idRestriccionEstandar;
+				const txMensaje = button.dataset.txMensaje;
+				const idDetalleCalificacion = button.dataset.idDetalleCalificacion;
+				console.log("ID Restricción Estandar:", idRestriccionEstandar);
 
-						document.getElementById('txtarea-causa').innerText = txMensaje;
-						// Aquí puedes agregar más lógica según lo que necesites hacer con el id
-					});
+				document.getElementById('txtarea-causa').innerText = txMensaje;
+				// Aquí puedes agregar más lógica según lo que necesites hacer con el id
+			});
 
-					// Ahora añade el botón (no card) al contenedor de restricciones
-					restriccionesContainer.appendChild(button);
-				});
-			} else {
-				document.getElementById('alert-sin-restricciones').style.display = 'block'
-				document.getElementById('content-card-restricciones').style.display = 'none';
-				// Si no hay restricciones, mostrar el mensaje
-				const noInfoCard = document.createElement('div');
-				noInfoCard.classList.add('swiper-slide');
-				noInfoCard.innerHTML = `
+			// Ahora añade el botón (no card) al contenedor de restricciones
+			restriccionesContainer.appendChild(button);
+		});
+	} else {
+		document.getElementById('alert-sin-restricciones').style.display = 'block'
+		document.getElementById('content-card-restricciones').style.display = 'none';
+		// Si no hay restricciones, mostrar el mensaje
+		const noInfoCard = document.createElement('div');
+		noInfoCard.classList.add('swiper-slide');
+		noInfoCard.innerHTML = `
                     <div class="card border border-dashed shadow-none">
                         <div class="card-body">
                             <div class="d-flex">
@@ -268,28 +282,22 @@ document.addEventListener("click", async function(event) {
                         </div>
                     </div>
                 `;
-				restriccionesContainer.appendChild(noInfoCard);
-			}
-
-			// Inicializar Swiper y recalcular tamaño después de agregar el contenido
-			const swiper = new Swiper(".vertical-swiper", {
-				slidesPerView: 2,
-				spaceBetween: 10,
-				mousewheel: true,
-				loop: true,
-				direction: "vertical",
-				autoplay: {
-					delay: 2500,
-					disableOnInteraction: false,
-				},
-			});
-
-
-		} catch (error) {
-			console.error('Error al listar restricciones :', error);
-		}
+		restriccionesContainer.appendChild(noInfoCard);
 	}
-});
+
+	// Inicializar Swiper y recalcular tamaño después de agregar el contenido
+	const swiper = new Swiper(".vertical-swiper", {
+		slidesPerView: 2,
+		spaceBetween: 10,
+		mousewheel: true,
+		loop: true,
+		direction: "vertical",
+		autoplay: {
+			delay: 2500,
+			disableOnInteraction: false,
+		},
+	});
+}
 
 document.getElementById('btnGuardarCalificacion').addEventListener('click', async () => {
 	const txtCausa = document.getElementById('txtarea-causa').value;
@@ -313,14 +321,14 @@ document.getElementById('btnGuardarCalificacion').addEventListener('click', asyn
 		const response = await fetchRegistrarCor(24484, txtCausa, txtObservacion, txtRecomendacion);
 		const { type, message } = response;
 		notification(type, message);
-		if (SYSTEM.Constants.SweetAlert.TypeMessage.Success == type) { 
+		if (SYSTEM.Constants.SweetAlert.TypeMessage.Success == type) {
 			document.getElementById('txtarea-causa').value = '';
 			document.getElementById('txtarea-observacion').value = '';
 			document.getElementById('txtarea-recomendacion').value = '';
 		}
 	} catch (error) {
 		console.error('Error al registrar cor:', error);
-	} 
+	}
 })
 
 function renderizarIconoEstadoManiobraEjecutada(estado) {
@@ -699,6 +707,22 @@ async function fetchObtenerMatrizACalificar() {
 		throw error;
 	}
 }
+
+
+async function fetchListarCORPorIdDetalleCalificacion(idDetalleCalificacion) {
+	try {
+		const response = await fetch(`/cor/listarPorIdDetalleCalificacion?idDetalleCalificacion=${idDetalleCalificacion}`);
+		if (!response.ok) {
+			throw new Error(`No se ha podido obtener los cor: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error al obtener los cor:', error);
+		throw error;
+	}
+}
+
 
 async function fetchListarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion) {
 	try {

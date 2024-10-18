@@ -1,6 +1,10 @@
 package pe.mil.fap.service.administration.usp.impl;
  
-import org.springframework.stereotype.Service; 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import pe.mil.fap.entity.administration.CorEntity; 
 import pe.mil.fap.mappers.administration.inf.CorMapper; 
 import pe.mil.fap.model.administration.CorDTO; 
 import pe.mil.fap.model.helpers.MessageDTO;
@@ -19,6 +23,17 @@ public class CorServiceImpl implements CorService{
 		super();
 		this.corUSPRepository = corUSPRepository;
 		this.corMapper = corMapper;
+	}
+
+	@Override
+	public List<CorDTO> listarCorPorIdDetalleCalificacion(Integer idDetalleCalificacion) throws ServiceException {
+		try {
+			List<CorEntity> lstEntity = corUSPRepository.listarCorPorIdDetalleCalificacion(idDetalleCalificacion);
+			List<CorDTO> lstDTO = corMapper.toListDTO(lstEntity);
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override

@@ -24,7 +24,13 @@ import jakarta.persistence.ParameterMode;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_TX_RECOMENDACION", type = String.class), 
 										
 										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_MENSAJE", type = String.class)
-		})
+		}),
+		@NamedStoredProcedureQuery(name = "cor.listar", 
+								   procedureName = "PKG_COR.SP_LISTAR", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_DETALLE_CALIFICACION", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
 				
 })
 

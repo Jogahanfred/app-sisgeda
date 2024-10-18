@@ -320,11 +320,7 @@ document.getElementById('btnGuardarCalificacion').addEventListener('click', asyn
 		}
 	} catch (error) {
 		console.error('Error al registrar cor:', error);
-	}
-
-	console.log(txtCausa)
-	console.log(txtObservacion)
-	console.log(txtRecomendacion)
+	} 
 })
 
 function renderizarIconoEstadoManiobraEjecutada(estado) {

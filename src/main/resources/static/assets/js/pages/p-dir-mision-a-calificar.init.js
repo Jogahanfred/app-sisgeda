@@ -311,8 +311,13 @@ document.getElementById('btnGuardarCalificacion').addEventListener('click', asyn
 
 	try {
 		const response = await fetchRegistrarCor(24484, txtCausa, txtObservacion, txtRecomendacion);
-		const {type, message} = response;
-		notification(type, message);		 
+		const { type, message } = response;
+		notification(type, message);
+		if (SYSTEM.Constants.SweetAlert.TypeMessage.Success == type) { 
+			document.getElementById('txtarea-causa').value = '';
+			document.getElementById('txtarea-observacion').value = '';
+			document.getElementById('txtarea-recomendacion').value = '';
+		}
 	} catch (error) {
 		console.error('Error al registrar cor:', error);
 	}

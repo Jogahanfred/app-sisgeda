@@ -5,10 +5,12 @@ import java.util.Optional;
  
 import pe.mil.fap.entity.bussiness.DetalleMisionEntity;
 import pe.mil.fap.entity.bussiness.MisionEntity;
+import pe.mil.fap.entity.helpers.CalificarMisionEntity;
 import pe.mil.fap.repository.exception.RepositoryException;
 
 public interface MisionUSPRepository {
-
+	
+	List<CalificarMisionEntity> listarMisionesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro, Integer idSubFase) throws RepositoryException;
 	List<MisionEntity> listarMisionesPorIdSubFase(Integer idSubFase) throws RepositoryException;
 	List<DetalleMisionEntity> listarDetalleMisionPorIdMision(Integer idMision) throws RepositoryException;
 	

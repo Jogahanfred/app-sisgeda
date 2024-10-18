@@ -2,6 +2,7 @@ package pe.mil.fap.repository.administration.usp.impl;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import pe.mil.fap.common.utils.UtilHelpers;
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.ProgramaEntity; 
 import pe.mil.fap.repository.administration.usp.inf.ProgramaUSPRepository;
 import pe.mil.fap.repository.exception.RepositoryException;
@@ -151,6 +153,44 @@ public class ProgramaUSPRepositoryImpl implements ProgramaUSPRepository {
 		}
 	}
 	
+	@Override
+	public Optional<ProgramaEntity> buscarId(Integer id) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("programa.buscarId");
+			spq.setParameter("P_ID_PROGRAMA", id); 
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<ProgramaEntity> lstProgramas = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				ProgramaEntity programa = new ProgramaEntity();
+
+				programa.setIdPrograma(Integer.parseInt(String.valueOf(obj[0])));
+				programa.setIdEscuadron(Integer.parseInt(String.valueOf(obj[1])));
+				programa.setNuPeriodo(Integer.parseInt(String.valueOf(obj[2])));
+				programa.setNoTipoInstruccion((String) obj[3]);
+				programa.setNoNombre((String) obj[4]);
+				programa.setTxDescripcion((String) obj[5]);
+				programa.setTxFinalidad((String) obj[6]);
+				programa.setFlBloqueado(Integer.parseInt(String.valueOf(obj[7])));
+				programa.setFlEstado(Integer.parseInt(String.valueOf(obj[8])));
+				programa.setTxDescripcionEscuadron(String.valueOf(obj[9]));
+				programa.setIdUnidad(Integer.parseInt(String.valueOf(obj[10])));
+				lstProgramas.add(programa);
+
+			}
+			
+			if (lstProgramas.isEmpty()) { 
+				return Optional.empty();
+			}
+			ProgramaEntity programa = (ProgramaEntity) lstProgramas.get(0);
+			return Optional.of(programa);
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
 	@Override
 	public String guardar(ProgramaEntity entity) throws RepositoryException { 
 		try {

@@ -14,6 +14,10 @@ import jakarta.persistence.StoredProcedureQuery;
 import pe.mil.fap.common.enums.SeveridadEnum;
 import pe.mil.fap.entity.bussiness.DetalleCalificacionEntity;
 import pe.mil.fap.entity.bussiness.MisionEntity;
+import pe.mil.fap.entity.helpers.EjeInterseccionACalificarEntity;
+import pe.mil.fap.entity.helpers.EjeInterseccionEntity;
+import pe.mil.fap.entity.helpers.EjeXEntity;
+import pe.mil.fap.entity.helpers.EjeYEntity;
 import pe.mil.fap.entity.helpers.InscripcionMisionEntity;
 import pe.mil.fap.entity.bussiness.CalificacionEntity;   
 import pe.mil.fap.repository.bussiness.usp.inf.CalificacionUSPRepository;
@@ -138,6 +142,201 @@ public class CalificacionUSPRepositoryImpl implements CalificacionUSPRepository 
 			return lstVerificacionSubFase;
 		} catch (Exception e) {
 			throw new RepositoryException(e);
+		}
+	}
+
+	@Override
+	public String asignarInstructor(Integer idCalificador, Integer idCalificacion) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificacion.asignarInstructor");
+
+			spq.setParameter("P_ID_CALIFICACION", idCalificacion);
+			spq.setParameter("P_ID_CALIFICADOR", idCalificador); 
+
+			spq.execute();
+
+			String mensaje = (String) spq.getOutputParameterValue("P_MENSAJE");
+
+			return mensaje;
+		} catch (Exception exception) {
+			throw new RepositoryException(exception.getMessage());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EjeXEntity> listarEjeX(Integer idCalificado) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificarMision.listarEjeX");
+			spq.setParameter("P_ID_CALIFICADO", idCalificado);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<EjeXEntity> lstEjeX = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				EjeXEntity ejeX = new EjeXEntity();
+
+				ejeX.setIdMision(Integer.parseInt(String.valueOf(obj[0])));
+				ejeX.setCoCodigo(String.valueOf(obj[1]));
+				ejeX.setIdTipoMision(Integer.parseInt(String.valueOf(obj[2])));
+				ejeX.setCoCodigoTipoMision(String.valueOf(obj[3]));
+				ejeX.setNoNombreTipoMision(String.valueOf(obj[4]));
+				ejeX.setIdCalificacion(Integer.parseInt(String.valueOf(obj[5])));
+				ejeX.setIdCalificador(obj[6] != null ? Integer.parseInt(String.valueOf(obj[6])): null);
+				
+				 
+				lstEjeX.add(ejeX);
+
+			}
+			return lstEjeX;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+ 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EjeYEntity> listarEjeY(Integer idCalificado) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificarMision.listarEjeY");
+			spq.setParameter("P_ID_CALIFICADO", idCalificado);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<EjeYEntity> lstEjeY = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				EjeYEntity ejeY = new EjeYEntity();
+
+				ejeY.setIdManiobra(Integer.parseInt(String.valueOf(obj[0])));
+				ejeY.setNoNombreManiobra(String.valueOf(obj[1]));
+				ejeY.setIdOperacion(Integer.parseInt(String.valueOf(obj[2]))); 
+				ejeY.setNoNombreOperacion(String.valueOf(obj[3]));
+				 
+				lstEjeY.add(ejeY);
+
+			}
+			return lstEjeY;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EjeInterseccionACalificarEntity> listarEjeInterseccionACalificar(Integer idCalificado) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificarMision.listarInterseccion");
+			spq.setParameter("P_ID_CALIFICADO", idCalificado); 
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<EjeInterseccionACalificarEntity> lstEjeInterseccion = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				EjeInterseccionACalificarEntity ejeInterseccion = new EjeInterseccionACalificarEntity();
+				
+				ejeInterseccion.setIdCalificacion(Integer.parseInt(String.valueOf(obj[0])));
+				ejeInterseccion.setIdDetalleCalificacion(Integer.parseInt(String.valueOf(obj[1])));
+				ejeInterseccion.setIdManiobra(Integer.parseInt(String.valueOf(obj[2])));
+				ejeInterseccion.setIdEstandarRequerido(Integer.parseInt(String.valueOf(obj[3])));
+				ejeInterseccion.setCoCodigoEstandarRequerido(String.valueOf(obj[4]));
+				ejeInterseccion.setIdEstandarObtenido(obj[5] != null ? Integer.parseInt(String.valueOf(obj[5])): null);
+				ejeInterseccion.setCoCodigoEstandarObtenido(obj[6] != null ? String.valueOf(obj[6]): null);
+				 
+				lstEjeInterseccion.add(ejeInterseccion);
+
+			}
+			return lstEjeInterseccion;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EjeXEntity> listarEjeXPorIdCalificacion(Integer idCalificado, Integer idCalificacion)
+			throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificarMision.listarEjeXPorIdCalificacion");
+			spq.setParameter("P_ID_CALIFICADO", idCalificado);
+			spq.setParameter("P_ID_CALIFICACION", idCalificacion);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<EjeXEntity> lstEjeX = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				EjeXEntity ejeX = new EjeXEntity();
+
+				ejeX.setIdMision(Integer.parseInt(String.valueOf(obj[0])));
+				ejeX.setCoCodigo(String.valueOf(obj[1]));
+				ejeX.setIdTipoMision(Integer.parseInt(String.valueOf(obj[2])));
+				ejeX.setCoCodigoTipoMision(String.valueOf(obj[3]));
+				ejeX.setNoNombreTipoMision(String.valueOf(obj[4]));
+				ejeX.setIdCalificacion(Integer.parseInt(String.valueOf(obj[5])));
+				 
+				lstEjeX.add(ejeX);
+
+			}
+			return lstEjeX;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EjeInterseccionACalificarEntity> listarEjeInterseccionACalificarPorIdCalificacion(Integer idCalificado,
+			Integer idCalificacion) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificarMision.listarInterseccionPorIdCalificacion");
+			spq.setParameter("P_ID_CALIFICADO", idCalificado);
+			spq.setParameter("P_ID_CALIFICACION", idCalificacion);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<EjeInterseccionACalificarEntity> lstEjeInterseccion = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				EjeInterseccionACalificarEntity ejeInterseccion = new EjeInterseccionACalificarEntity();
+				
+				ejeInterseccion.setIdCalificacion(Integer.parseInt(String.valueOf(obj[0])));
+				ejeInterseccion.setIdDetalleCalificacion(Integer.parseInt(String.valueOf(obj[1])));
+				ejeInterseccion.setIdManiobra(Integer.parseInt(String.valueOf(obj[2])));
+				ejeInterseccion.setIdEstandarRequerido(Integer.parseInt(String.valueOf(obj[3])));
+				ejeInterseccion.setCoCodigoEstandarRequerido(String.valueOf(obj[4]));
+				ejeInterseccion.setIdEstandarObtenido(obj[5] != null ? Integer.parseInt(String.valueOf(obj[5])): null);
+				ejeInterseccion.setCoCodigoEstandarObtenido(obj[6] != null ? String.valueOf(obj[6]): null);
+				 
+				lstEjeInterseccion.add(ejeInterseccion);
+
+			}
+			return lstEjeInterseccion;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@Override
+	public String calificarManiobra(Integer idManiobra, Integer idCalificacion, Integer idEstandarObtenido)
+			throws RepositoryException {
+		String mensaje = "";
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("calificacion.calificarManiobra");
+
+			spq.setParameter("P_ID_MANIOBRA", idManiobra);
+			spq.setParameter("P_ID_CALIFICACION", idCalificacion);
+			spq.setParameter("P_ID_ESTANDAR", idEstandarObtenido); 
+
+			spq.execute();
+
+			mensaje = (String) spq.getOutputParameterValue("P_MENSAJE"); 
+			return mensaje; 
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			throw new RepositoryException("Error al calificar maniobra");
 		}
 	}
 

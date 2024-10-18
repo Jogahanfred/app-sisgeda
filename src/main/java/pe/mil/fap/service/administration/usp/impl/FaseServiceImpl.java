@@ -1,13 +1,21 @@
 package pe.mil.fap.service.administration.usp.impl;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.FaseEntity;
+import pe.mil.fap.entity.administration.MiembroEntity;
+import pe.mil.fap.entity.administration.ProgramaEntity;
 import pe.mil.fap.mappers.administration.inf.FaseMapper;
 import pe.mil.fap.model.administration.FaseDTO;
+import pe.mil.fap.model.administration.MiembroDTO;
+import pe.mil.fap.model.helpers.FaseInscritoDTOResponse;
 import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.ProgramaInscritoDTOResponse;
 import pe.mil.fap.repository.administration.usp.inf.FaseUSPRepository;
 import pe.mil.fap.service.administration.usp.inf.FaseService;
 import pe.mil.fap.service.exception.ServiceException;
@@ -38,6 +46,25 @@ public class FaseServiceImpl implements FaseService {
 	}
 	
 	@Override
+	public List<FaseInscritoDTOResponse> listarFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro,
+			Integer idPrograma) throws ServiceException {
+		try {
+			List<FaseEntity> lstEntity = faseUSPRepository.listarFasesACalificarPorPeriodo(nuPeriodo, idMiembro, idPrograma);
+			List<FaseInscritoDTOResponse> lstDTO = lstEntity.stream().map(fase -> {
+				FaseInscritoDTOResponse dto = new FaseInscritoDTOResponse();
+				dto.setIdFase(fase.getIdFase());
+				dto.setNoNombre(fase.getTxDescripcionFase());
+				dto.setNuTotalHora(fase.getNuTotalHora());
+				dto.setNuTotalSubFase(fase.getNuTotalSubFase());
+				return dto;
+			}).collect(Collectors.toList());
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
 	public List<FaseDTO> listarFasesPorIdUnidad(Integer idUnidad) throws ServiceException {
 		try {
 			List<FaseEntity> lstEntity = faseUSPRepository.listarFasesPorIdUnidad(idUnidad); 
@@ -64,6 +91,16 @@ public class FaseServiceImpl implements FaseService {
 		}
 	}
 	
+	@Override
+	public Optional<FaseDTO> buscarPorId(Integer id) throws ServiceException {
+		try {
+			Optional<FaseEntity> optEntity = faseUSPRepository.buscarId(id);
+			return Optional.of(faseMapper.toDTO(optEntity.get()));
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
 	@Override
 	public MessageDTO guardar(FaseDTO dto) throws ServiceException {
 		try { 

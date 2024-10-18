@@ -65,6 +65,38 @@ public class SubFaseUSPRepositoryImpl implements SubFaseUSPRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<SubFaseEntity> listarSubFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro, Integer idFase)
+			throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("subFase.listarCalificarPorPeriodo");
+			spq.setParameter("P_PERIODO", nuPeriodo);
+			spq.setParameter("P_ID_CALIFICADO", idMiembro);
+			spq.setParameter("P_ID_FASE", idFase);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<SubFaseEntity> lstSubFase = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				SubFaseEntity fase = new SubFaseEntity();
+
+				fase.setIdSubFase(Integer.parseInt(String.valueOf(obj[0])));
+				fase.setTxDescripcionSubFase((String) obj[1]);
+				fase.setNuTotalHora(Integer.parseInt(String.valueOf(obj[2])));
+				fase.setNuTotalMision(Integer.parseInt(String.valueOf(obj[3])));
+				fase.setNuTotalManiobra(Integer.parseInt(String.valueOf(obj[4])));
+				fase.setCoCodigo(String.valueOf(obj[5]));
+				lstSubFase.add(fase);
+
+			}
+			return lstSubFase;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<SubFaseEntity> listarSubFasesPorIdUnidad(Integer idUnidad) throws RepositoryException {
 		try {
 			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("subFase.listarPorUnidad");

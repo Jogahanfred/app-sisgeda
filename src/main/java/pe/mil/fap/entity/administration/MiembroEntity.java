@@ -27,7 +27,8 @@ import jakarta.validation.constraints.Size;
 							   procedureName = "PKG_MIEMBRO.SP_LISTAR_A_CALIFICAR_POR_PERIODO", 
 							   parameters = { 
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_PERIODO", type = Integer.class),
-									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ROL", type = String.class),
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_TIPO_INSTRUCCION", type = String.class),
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_ESCUADRON", type = Integer.class), 
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
 	}), 
@@ -38,12 +39,19 @@ import jakarta.validation.constraints.Size;
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class)
 	}), 
-	@NamedStoredProcedureQuery(name = "miembro.buscarPorNsa", 
-							   procedureName = "PKG_MIEMBRO.SP_BUSCAR_NSA", 
+	@NamedStoredProcedureQuery(name = "miembro.buscarPorNsaPorRolPeriodo", 
+							   procedureName = "PKG_MIEMBRO.SP_BUSCAR_NSA_POR_ROL_PERIODO", 
 							   parameters = { 
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_NSA", type = String.class),
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ROL", type = String.class),
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_PERIODO", type = Integer.class),
+									
+									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+	}),  
+	@NamedStoredProcedureQuery(name = "miembro.buscarPorNsa", 
+							   procedureName = "PKG_MIEMBRO.SP_BUSCAR_NSA", 
+							   parameters = { 
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_NSA", type = String.class), 
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
 	}), 

@@ -18,8 +18,13 @@ import jakarta.validation.constraints.Size;
 							   procedureName = "PKG_ESTANDAR.SP_LISTAR", 
 							   parameters = { 
 			   						@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-	}) 
-			
+	}),
+	@NamedStoredProcedureQuery(name = "estandar.buscarPorCodigo", 
+							   procedureName = "PKG_ESTANDAR.SP_BUSCAR_POR_CODIGO", 
+							   parameters = { 
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_CODIGO", type = String.class),
+									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class)
+	})  
 })
 @Entity(name = "EstandarEntity")
 @Table(name = "TBL_ESTANDAR")

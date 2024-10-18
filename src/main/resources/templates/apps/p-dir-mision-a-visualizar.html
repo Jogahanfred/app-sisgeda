@@ -1,0 +1,240 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}">
+
+<th:block layout:fragment="pagetitle">
+	<div th:replace="partials/title-meta :: title-meta('Visualizar Misión')"></div>
+</th:block>
+
+<head>
+	<link rel="stylesheet" href="/assets/libs/@tarekraafat/autocomplete.js/css/autoComplete.css">
+	<link rel="stylesheet" href="/assets/libs/nouislider/nouislider.min.css">
+	<link href="/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="partials/page-title :: page-title('Visualizar Misión','Misiones Inscritas')"></div>
+		
+		<div class="row">
+				<div class="col">
+					
+					<div class="row mb-3 pb-1">
+						<div class="col-12">
+							<div class="d-flex align-items-lg-center flex-lg-row flex-column">
+								<div class="flex-grow-1">
+									<h4 class="fs-16 mb-1">¿Que sub fase desea consultar?</h4>
+									<p class="text-muted mb-0"><!--span th:text="${miembro.personal.sexo == 'MASCULINO' ? 'El ': 'La '}"></span--> <strong><!--span th:text="${miembro.personal.datosCompletos}"></span></strong>, esta inscrit<span th:text="${miembro.personal.sexo == 'MASCULINO' ? 'o': 'a'}"></span--> en la fase <strong>"<!--span th:text="${fase.txDescripcionFase}"></span-->"</strong>, que contiene las siguientes sub fases.</p>
+								</div>
+								<div class="mt-3 mt-lg-0">
+									<form action="javascript:void(0);">
+										<div class="row g-3 mb-0 align-items-center">  
+											<div class="col-auto">
+												<button id="btnRetornar"
+														type="button" 
+												        class="btn btn-soft-success shadow-none">
+					  								<i class="ri-reply-line align-bottom me-1"></i> 		
+												    Retornar
+												</button>
+											</div> 
+										</div> 
+									</form>
+								</div>
+							</div>
+						</div>
+						<!--end col-->
+					</div>
+					
+					<div class="card"> 
+						
+						<div class="mb-3 card-body" style="overflow-y: auto;"> 
+							<div id="tbl-matriz" > 
+							</div>
+							<div id="loader" class="text-center" style="display: none;">							
+								<div class="spinner-grow text-light" role="status">
+								    <span class="sr-only">Cargando...</span>
+								</div>
+								<div class="spinner-grow text-light" role="status">
+								    <span class="sr-only">Cargando...</span>
+								</div>
+								<div class="spinner-grow text-light" role="status">
+								    <span class="sr-only">Cargando...</span>
+								</div>
+							</div>
+						</div> 
+										
+						<div class="border-top border-top-dashed m-3">
+							<h6 class="my-3 fw-semibold text-uppercase text-center">Sumario</h6>
+							<div class="row g-3">
+								
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-info 
+															text-info 
+															rounded-circle 
+															shadow">
+													D
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Demostración
+													</a>
+												</h5>
+												<div>Demostrativo</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+	
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-warning 
+															text-warning 
+															rounded-circle 
+															shadow">
+													I
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Insuficiente
+													</a>
+												</h5>
+												<div>Estándar Insuficiente</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+	
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-primary 
+															text-primary 
+															rounded-circle 
+															shadow">
+													R
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Regular
+													</a>
+												</h5>
+												<div>Estándar Regular</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+	
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-secondary 
+															text-secondary 
+															rounded-circle 
+															shadow">
+													B
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Bueno
+													</a>
+												</h5>
+												<div>Estándar Bueno</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+								
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-success 
+															text-success 
+															rounded-circle 
+															shadow">
+													E
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Excelente
+													</a>
+												</h5>
+												<div>Estándar Excelente</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+								
+								<div class="col-xxl-2 col-lg-4">
+									<div class="border rounded border-dashed p-2">
+										<div class="d-flex align-items-center">
+											<div class="avatar-xs flex-shrink-0 me-3">
+												<div class="avatar-title 
+															bg-soft-light
+															text-dark 
+															rounded-circle 
+															shadow">
+													SE
+												</div>
+											</div>
+											<div class="flex-grow-1 overflow-hidden">
+												<h5 class="fs-13 mb-1">
+													<a href="#" class="text-body text-truncate d-block">
+														Sin Estándar
+													</a>
+												</h5>
+												<div>Sin Selección</div>
+											</div> 
+										</div>
+									</div>
+								</div> 
+												
+							</div> 
+						</div>
+						
+					</div> 
+					
+				</div> 
+			</div>  
+		</div> 
+	
+	<th:block layout:fragment="pagejs">
+	 	<script src="/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js"></script> 
+		
+	    <!-- nouisliderribute js -->
+	    <script src="/assets/libs/nouislider/nouislider.min.js"></script>
+	    <script src="/assets/libs/wnumb/wNumb.min.js"></script>
+	
+	    <script src="/assets/js/pages/p-dir-mision-a-visualizar.init.js"></script>
+	
+		<!-- Sweet Alerts js -->
+		<script src="/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+		
+		<!--Notifications js -->
+		<script src="/assets/js/notifications.js"></script>
+
+	</th:block>
+</body>

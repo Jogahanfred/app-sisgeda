@@ -35,6 +35,17 @@ public class RestriccionEstandarServiceImpl implements RestriccionEstandarServic
 			throw new ServiceException(e);
 		}
 	}
+	
+	@Override
+	public List<RestriccionEstandarDTO> listarRestriccionesPorIdDetalleCalificacion(Integer idDetalleCalificacion) throws ServiceException {
+		try {
+			List<RestriccionEstandarEntity> lstEntity = restriccionEstandarUSPRepository.listarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion);
+			List<RestriccionEstandarDTO> lstDTO = restriccionEstandarMapper.toListDTO(lstEntity);
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	@Override
 	public MessageDTO guardar(RestriccionEstandarDTO dto) throws ServiceException {

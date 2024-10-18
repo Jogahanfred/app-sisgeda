@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
-import pe.mil.fap.common.constants.Configuracion; 
+import pe.mil.fap.common.constants.Configuracion;
+import pe.mil.fap.common.utils.UtilHelpers;
 import pe.mil.fap.model.administration.BancoFaseDTO;
 import pe.mil.fap.model.administration.EscuadronDTO;
-import pe.mil.fap.model.administration.FaseDTO; 
+import pe.mil.fap.model.administration.FaseDTO;
+import pe.mil.fap.model.helpers.FaseInscritoDTOResponse;
 import pe.mil.fap.model.helpers.MessageDTO;
 import pe.mil.fap.model.helpers.SelectItemDTO;
 import pe.mil.fap.model.security.UsuarioDTO;
@@ -95,6 +97,14 @@ public class FaseController {
 	public List<FaseDTO> listarFasesPorIdPrograma(@RequestParam(name = "idPrograma", required = false) Integer idPrograma, HttpServletRequest request) throws Exception { 
 		List<FaseDTO> lstFases = faseService.listarFasesPorIdPrograma(idPrograma);
 		return lstFases;
+	} 
+	
+	@GetMapping("/listarFasesACalificarPorPeriodo")
+	@ResponseBody
+	public List<FaseInscritoDTOResponse> listarFasesACalificarPorPeriodo(HttpServletRequest request) throws Exception { 
+		Integer idMiembro = (Integer) request.getSession().getAttribute("idMiembro");
+		Integer idPrograma = (Integer) request.getSession().getAttribute("idPrograma");
+		return faseService.listarFasesACalificarPorPeriodo(UtilHelpers.getCurrentYear(), idMiembro, idPrograma);
 	} 
 	
 	@PostMapping("/guardar")

@@ -83,6 +83,18 @@ public class EscuadronController {
 		return lstEscuadrones;
 	} 
 	
+	@GetMapping("/listarPorIdUnidad")
+	@ResponseBody
+	public List<EscuadronDTO> listarPorIdUnidad(@RequestParam(name = "idUnidad", required = false) Integer idUnidad, HttpServletRequest request) throws Exception { 
+		if (idUnidad == null) {			
+			UsuarioDTO usuarioDTO = (UsuarioDTO) request.getSession().getAttribute(Configuracion.Helper.USUARIO_LOGEADO);
+			idUnidad = usuarioDTO.getIdUnidad();
+		}
+		List<EscuadronDTO> lstEscuadrones = escuadronService.listarEscuadronesPorIdUnidad(idUnidad);
+		return lstEscuadrones;
+	} 
+	
+	
 	@PostMapping("/guardar")
 	@ResponseBody
 	public MessageDTO guardar(@RequestParam(name = "archivo", required = false) MultipartFile archivo, @RequestParam("escuadron") String escuadronJson)

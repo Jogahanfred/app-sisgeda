@@ -21,12 +21,13 @@ public class MiembroUSPRepositoryImpl implements MiembroUSPRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MiembroEntity> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol)
+	public List<MiembroEntity> listarMiembrosACalificarPorPeriodo(Integer idEscuadron, Integer nuPeriodo, String noTipoInstruccion)
 			throws RepositoryException {
 		try {
 			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("miembro.listarCalificarPorPeriodo");
-			spq.setParameter("P_ROL", noRol.toUpperCase());
+			spq.setParameter("P_TIPO_INSTRUCCION", noTipoInstruccion.toUpperCase());
 			spq.setParameter("P_PERIODO", nuPeriodo);
+			spq.setParameter("P_ID_ESCUADRON", idEscuadron); 
 			spq.execute();
  
 			List<Object[]> results =  spq.getResultList();
@@ -116,12 +117,46 @@ public class MiembroUSPRepositoryImpl implements MiembroUSPRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<MiembroEntity> buscarPorNsa(String coNsa, Integer nuPeriodo, String noRol) throws RepositoryException {
+	public Optional<MiembroEntity> buscarPorNsaPorRolPeriodo(String coNsa, Integer nuPeriodo, String noRol) throws RepositoryException {
 		try {
-			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("miembro.buscarPorNsa");
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("miembro.buscarPorNsaPorRolPeriodo");
 			spq.setParameter("P_NSA", coNsa); 
 			spq.setParameter("P_ROL", noRol); 
 			spq.setParameter("P_PERIODO", nuPeriodo); 
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<MiembroEntity> lstMiembros = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				MiembroEntity miembro = new MiembroEntity();
+
+				miembro.setIdMiembro(Integer.parseInt(String.valueOf(obj[0])));
+				miembro.setIdUnidad(Integer.parseInt(String.valueOf(obj[1])));
+				miembro.setCoNsa((String) obj[2]);
+				miembro.setNuPeriodo(Integer.parseInt(String.valueOf(obj[3])));
+				miembro.setFlBloqueado(Integer.parseInt(String.valueOf(obj[4])));
+				miembro.setFlEstado(Integer.parseInt(String.valueOf(obj[5])));
+				lstMiembros.add(miembro);
+
+			}
+			
+			if (lstMiembros.isEmpty()) { 
+				return Optional.empty();
+			}
+			MiembroEntity miembro = (MiembroEntity) lstMiembros.get(0);
+			return Optional.of(miembro);
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	} 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<MiembroEntity> buscarPorNsa(String coNsa) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("miembro.buscarPorNsa");
+			spq.setParameter("P_NSA", coNsa);  
 			spq.execute();
 
 			List<Object[]> results = spq.getResultList();

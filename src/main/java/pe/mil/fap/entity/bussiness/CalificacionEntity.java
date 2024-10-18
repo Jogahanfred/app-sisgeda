@@ -24,6 +24,14 @@ import jakarta.validation.constraints.Size;
 										
 										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_ID_CALIFICACION", type = Integer.class)
 		}),
+		@NamedStoredProcedureQuery(name = "calificacion.asignarInstructor", 
+								   procedureName = "PKG_CALIFICACION.SP_AGINAR_CALIFICADOR", 
+								   parameters = {						
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICACION", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADOR", type = Integer.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_MENSAJE", type = String.class)
+		}),
 		@NamedStoredProcedureQuery(name = "calificacion.verificarInscripcionMision", 
 								   procedureName = "PKG_CALIFICACION.SP_VERIFICAR_INSCRIPCION_MISION", 
 								   parameters = {  
@@ -39,6 +47,15 @@ import jakarta.validation.constraints.Size;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_IDS", type = String.class), 
 						
 										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
+		@NamedStoredProcedureQuery(name = "calificacion.calificarManiobra", 
+								   procedureName = "PKG_CALIFICAR_MISION.SP_CALIFICAR_MANIOBRA", 
+								   parameters = {  
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_MANIOBRA", type = Integer.class), 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICACION", type = Integer.class), 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_ESTANDAR", type = Integer.class),  
+
+										@StoredProcedureParameter(mode = ParameterMode.OUT, name = "P_MENSAJE", type = String.class)
 		}) 
 })
 

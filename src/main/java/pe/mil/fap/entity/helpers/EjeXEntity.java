@@ -16,34 +16,67 @@ import jakarta.persistence.StoredProcedureParameter;
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_SUB_FASE", type = Integer.class), 
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-	})
+	}),
+	@NamedStoredProcedureQuery(name = "calificarMision.listarEjeX", 
+							   procedureName = "PKG_CALIFICAR_MISION.SP_LISTAR_EJE_X", 
+							   parameters = {						
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class), 
+									
+									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+	}),
+	@NamedStoredProcedureQuery(name = "calificarMision.listarEjeXPorIdCalificacion", 
+	   procedureName = "PKG_CALIFICAR_MISION.SP_LISTAR_EJE_X_POR_ID_CALIFICACION", 
+	   parameters = {						
+			@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class), 
+			@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICACION", type = Integer.class), 
+					
+			@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+})
 })
 
 @Entity(name = "EjeXEntity")
 public class EjeXEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	 
+	  
+	
 	@Id  
 	private Integer idMision; 
 	private String coCodigo; 
 	private Integer idTipoMision;
 	private String coCodigoTipoMision; 
 	private String noNombreTipoMision;
+	private Integer idCalificacion;
+	private Integer idCalificador;
 	
 	public EjeXEntity() {
 		super();
 	}
 	
+ 
 	public EjeXEntity(Integer idMision, String coCodigo, Integer idTipoMision, String coCodigoTipoMision,
-			String noNombreTipoMision) {
+			String noNombreTipoMision, Integer idCalificacion, Integer idCalificador) {
 		super();
 		this.idMision = idMision;
 		this.coCodigo = coCodigo;
 		this.idTipoMision = idTipoMision;
 		this.coCodigoTipoMision = coCodigoTipoMision;
 		this.noNombreTipoMision = noNombreTipoMision;
+		this.idCalificacion = idCalificacion;
+		this.idCalificador = idCalificador;
 	}
+
+
+	public Integer getIdCalificacion() {
+		return idCalificacion;
+	}
+
+
+	public void setIdCalificacion(Integer idCalificacion) {
+		this.idCalificacion = idCalificacion;
+	}
+
+
 	public Integer getIdMision() {
 		return idMision;
 	}
@@ -73,6 +106,15 @@ public class EjeXEntity implements Serializable {
 	}
 	public void setNoNombreTipoMision(String noNombreTipoMision) {
 		this.noNombreTipoMision = noNombreTipoMision;
+	}
+
+	public Integer getIdCalificador() {
+		return idCalificador;
+	}
+
+
+	public void setIdCalificador(Integer idCalificador) {
+		this.idCalificador = idCalificador;
 	} 
 	  
 	     

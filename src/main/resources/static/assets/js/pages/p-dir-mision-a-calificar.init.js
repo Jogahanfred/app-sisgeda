@@ -197,7 +197,8 @@ document.addEventListener("click", async function(event) {
 			]);
 			console.log("LISTA: ", lstRestricciones);
 			console.log("lstCOR: ", lstCOR);
-			renderizarRestricciones(lstRestricciones)
+			renderizarRestricciones(lstRestricciones, idDetalleCalificacion)
+			renderizarCOR(lstCOR)
 
 
 
@@ -207,7 +208,87 @@ document.addEventListener("click", async function(event) {
 	}
 });
 
-function renderizarRestricciones(lstRestricciones) {
+function renderizarCOR(lstCor) {
+	const corContainer = document.getElementById('content-cor');
+	corContainer.innerHTML = '';;
+	corContainer.classList.add('acitivity-timeline', 'acitivity-main');
+
+	if (lstCor && lstCor.length > 0) {
+		document.getElementById('alert-sin-cor').style.display = 'none'
+		document.getElementById('content-card-cor').style.display = 'block';
+		// Si hay restricciones, iterar y mostrarlas
+		lstCor.forEach(cor => {
+			const corDiv = document.createElement('div'); 
+			corDiv.classList.add('p-2', 'my-2', 'rounded','border','border-dashed');
+
+			corDiv.innerHTML = `
+				       <div class="pt-1 acitivity-item d-flex">
+						 <div class="flex-shrink-0 avatar-xs acitivity-avatar">
+							<div class="avatar-title bg-soft-danger text-danger rounded-circle shadow">
+								<i class="ri-stack-fill"></i>
+							</div>
+					   	 </div>
+					   	 <div class="flex-grow-1 ms-3">
+							<p class="mb-1 text-danger">Causa</p>
+							<h6 class="mb-1 lh-base text-danger">${cor.txCausa}</h6>
+							<small class="mb-0 text-muted">${cor.feRegistro}</small>
+						 </div>
+					   </div>
+						
+					   <div class="pt-1 acitivity-item d-flex">
+						 <div class="flex-shrink-0 avatar-xs acitivity-avatar">
+							<div class="avatar-title bg-soft-secondary text-secondary rounded-circle shadow">
+								<i class="ri-stack-fill"></i>
+							</div>
+						 </div>
+						 <div class="flex-grow-1 ms-3">
+							<p class="mb-1 text-secondary">Observación</p>
+							<h6 class="mb-1 lh-base text-secondary">${cor.txObservacion}</h6>
+							<small class="mb-0 text-muted">${cor.feRegistro}</small>
+						 </div>
+					    </div>
+					    
+						<div class="pt-1 acitivity-item d-flex">
+							<div class="flex-shrink-0 avatar-xs acitivity-avatar">
+								<div class="avatar-title bg-soft-dark text-dark rounded-circle shadow">
+									<i class="ri-stack-fill"></i>
+								</div>
+							</div>
+							<div class="flex-grow-1 ms-3">
+								<p class="text-dark mb-1">Recomendación</p>
+								<h6 class="mb-1 lh-base text-dark">${cor.txRecomendacion}</h6>
+								<small class="mb-0 text-muted">${cor.feRegistro}</small>
+							</div>
+						</div>
+				    `;
+
+
+			// Ahora añade el botón (no card) al contenedor de restricciones
+			corContainer.appendChild(corDiv);
+		});
+	} else {
+		document.getElementById('alert-sin-cor').style.display = 'block'
+		document.getElementById('content-card-cor').style.display = 'none';
+		// Si no hay restricciones, mostrar el mensaje
+		const noInfoCard = document.createElement('div');
+		noInfoCard.classList.add('swiper-slide');
+		noInfoCard.innerHTML = `
+                    <div class="card border border-dashed shadow-none">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="text-muted mb-1 fst-italic text-truncate-two-lines">No existe información</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+		corContainer.appendChild(noInfoCard);
+	}
+
+}
+
+function renderizarRestricciones(lstRestricciones, idDetalleCalificacion) {
 	// Limpiar el contenedor antes de añadir contenido
 	const restriccionesContainer = document.getElementById('content-restricciones');
 	restriccionesContainer.innerHTML = '';

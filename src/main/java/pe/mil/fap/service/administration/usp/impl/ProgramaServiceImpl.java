@@ -1,10 +1,12 @@
 package pe.mil.fap.service.administration.usp.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.ProgramaEntity;
 import pe.mil.fap.mappers.administration.inf.ProgramaMapper;
 import pe.mil.fap.model.administration.ProgramaDTO;
@@ -80,6 +82,16 @@ public class ProgramaServiceImpl implements ProgramaService {
 		}
 	}
 	
+	@Override
+	public Optional<ProgramaDTO> buscarId(Integer id) throws ServiceException {
+		try { 
+			Optional<ProgramaEntity> optEntity = programaUSPRepository.buscarId(id);
+			return Optional.of(programaMapper.toDTO(optEntity.get()));
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
 	@Override
 	public MessageDTO guardar(ProgramaDTO dto) throws ServiceException {
 		try { 

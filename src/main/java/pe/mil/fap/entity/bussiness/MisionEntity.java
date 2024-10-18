@@ -41,6 +41,15 @@ import jakarta.validation.constraints.Size;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_MISION", type = Integer.class),
 										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class) 
 		}),
+		@NamedStoredProcedureQuery(name = "mision.listarCalificarPorPeriodo", 
+								   procedureName = "PKG_MISION.SP_LISTAR_A_CALIFICAR_POR_PERIODO", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_PERIODO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_SUB_FASE", type = Integer.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}) 
 })
 
 @Entity(name = "MisionEntity")
@@ -77,6 +86,12 @@ public class MisionEntity implements Serializable{
 	
 	@Transient
 	private List<DetalleMisionEntity> lstDetalleMision = new ArrayList<>();
+
+	@Transient
+	private String txDescripcionTipoMision;
+	
+	@Transient
+	private String txNombreTipoMision;
 
 	public MisionEntity(Integer idMision, @NotNull(message = "La sub fase no puede ser vacia") Integer idSubFase,
 			@NotNull(message = "El tipo de misión no puede ser vacio") Integer idTipoMision,
@@ -159,6 +174,22 @@ public class MisionEntity implements Serializable{
 
 	public void setLstDetalleMision(List<DetalleMisionEntity> lstDetalleMision) {
 		this.lstDetalleMision = lstDetalleMision;
+	}
+
+	public String getTxDescripcionTipoMision() {
+		return txDescripcionTipoMision;
+	}
+
+	public void setTxDescripcionTipoMision(String txDescripcionTipoMision) {
+		this.txDescripcionTipoMision = txDescripcionTipoMision;
+	}
+
+	public String getTxNombreTipoMision() {
+		return txNombreTipoMision;
+	}
+
+	public void setTxNombreTipoMision(String txNombreTipoMision) {
+		this.txNombreTipoMision = txNombreTipoMision;
 	}
 
 	@Override

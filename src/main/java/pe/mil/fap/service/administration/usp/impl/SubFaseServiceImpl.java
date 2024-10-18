@@ -3,10 +3,12 @@ package pe.mil.fap.service.administration.usp.impl;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import pe.mil.fap.common.enums.SeveridadEnum;
+import pe.mil.fap.entity.administration.FaseEntity;
 import pe.mil.fap.entity.administration.SubFaseEntity;
 import pe.mil.fap.entity.helpers.EjeInterseccionEntity;
 import pe.mil.fap.entity.helpers.EjeXEntity;
@@ -19,8 +21,10 @@ import pe.mil.fap.model.administration.SubFaseDTO;
 import pe.mil.fap.model.helpers.EjeInterseccionDTO;
 import pe.mil.fap.model.helpers.EjeXDTO;
 import pe.mil.fap.model.helpers.EjeYDTO;
+import pe.mil.fap.model.helpers.FaseInscritoDTOResponse;
 import pe.mil.fap.model.helpers.MatrizSubFaseDTO;
 import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.SubFaseInscritoDTOResponse;
 import pe.mil.fap.repository.administration.usp.inf.SubFaseUSPRepository;
 import pe.mil.fap.service.administration.usp.inf.RestriccionEstandarService;
 import pe.mil.fap.service.administration.usp.inf.SubFaseService;
@@ -62,6 +66,27 @@ public class SubFaseServiceImpl implements SubFaseService {
 		}
 	}
 	
+	@Override
+	public List<SubFaseInscritoDTOResponse> listarSubFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro,
+			Integer idFase) throws ServiceException {
+		try {
+			List<SubFaseEntity> lstEntity = subFaseUSPRepository.listarSubFasesACalificarPorPeriodo(nuPeriodo, idMiembro, idFase);
+			List<SubFaseInscritoDTOResponse> lstDTO = lstEntity.stream().map(subFase -> {
+				SubFaseInscritoDTOResponse dto = new SubFaseInscritoDTOResponse();
+				dto.setIdSubFase(subFase.getIdSubFase());
+				dto.setNoNombre(subFase.getTxDescripcionSubFase());
+				dto.setNuTotalHora(subFase.getNuTotalHora());
+				dto.setNuTotalMision(subFase.getNuTotalMision());
+				dto.setNuTotalManiobra(subFase.getNuTotalManiobra());
+				dto.setCoCodigo(subFase.getCoCodigo());
+				return dto;
+			}).collect(Collectors.toList());
+			return lstDTO;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
 	@Override
 	public List<SubFaseDTO> listarSubFasesPorIdUnidad(Integer idUnidad) throws ServiceException {
 		try {

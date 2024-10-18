@@ -20,7 +20,16 @@ import jakarta.validation.constraints.Size;
 								   procedureName = "PKG_FASE.SP_LISTAR", 
 								   parameters = { 
 				   						@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-		}),  
+		}), 
+		@NamedStoredProcedureQuery(name = "fase.listarCalificarPorPeriodo", 
+								   procedureName = "PKG_FASE.SP_LISTAR_A_CALIFICAR_POR_PERIODO", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_PERIODO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_PROGRAMA", type = Integer.class),
+										
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
 		@NamedStoredProcedureQuery(name = "fase.listarPorUnidad", 
 								   procedureName = "PKG_FASE.SP_LISTAR_POR_UNIDAD", 
 								   parameters = { 
@@ -32,7 +41,13 @@ import jakarta.validation.constraints.Size;
 								   parameters = { 
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_PROGRAMA", type = Integer.class),
 										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-		}),  
+		}),   
+		@NamedStoredProcedureQuery(name = "fase.buscarId", 
+								   procedureName = "PKG_FASE.SP_BUSCAR_ID", 
+								   parameters = {
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_FASE", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class) 
+		}),
 		@NamedStoredProcedureQuery(name = "fase.insertar", 
 								   procedureName = "PKG_FASE.SP_INSERTAR", 
 								   parameters = {						

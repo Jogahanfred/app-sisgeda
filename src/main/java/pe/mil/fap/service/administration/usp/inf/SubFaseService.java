@@ -5,12 +5,14 @@ import java.util.Map;
 import java.util.Optional;
  
 import pe.mil.fap.model.administration.SubFaseDTO; 
-import pe.mil.fap.model.helpers.MessageDTO; 
+import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.SubFaseInscritoDTOResponse;
 import pe.mil.fap.service.exception.ServiceException; 
 
 public interface SubFaseService {
 
 	List<SubFaseDTO> listarSubFases() throws ServiceException;
+	List<SubFaseInscritoDTOResponse> listarSubFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro, Integer idFase) throws ServiceException;
 	List<SubFaseDTO> listarSubFasesPorIdUnidad(Integer idUnidad) throws ServiceException;
 	List<SubFaseDTO> listarSubFasesPorIdFase(Integer idFase) throws ServiceException;
 	List<Map<Integer, String>> listarFiltroPeriodo(Integer nuPeriodo) throws ServiceException;

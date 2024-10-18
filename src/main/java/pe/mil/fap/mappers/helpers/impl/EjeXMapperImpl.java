@@ -14,12 +14,12 @@ public class EjeXMapperImpl implements EjeXMapper{
 
 	@Override
 	public EjeXDTO toDTO(EjeXEntity entity) {
-		return new EjeXDTO(entity.getIdMision(), entity.getCoCodigo(), entity.getIdTipoMision(), entity.getCoCodigoTipoMision(), entity.getNoNombreTipoMision());
+		return new EjeXDTO(entity.getIdMision(), entity.getCoCodigo(), entity.getIdTipoMision(), entity.getCoCodigoTipoMision(), entity.getNoNombreTipoMision(), entity.getIdCalificacion(), entity.getIdCalificador());
 	}
 
 	@Override
 	public EjeXEntity toEntity(EjeXDTO dto) {
-		return new EjeXEntity(dto.getIdMision(), dto.getCoCodigo(), dto.getIdTipoMision(), dto.getCoCodigoTipoMision(), dto.getNoNombreTipoMision());
+		return new EjeXEntity(dto.getIdMision(), dto.getCoCodigo(), dto.getIdTipoMision(), dto.getCoCodigoTipoMision(), dto.getNoNombreTipoMision(), dto.getIdCalificacion(), dto.getIdCalificador());
 	}
 
 	@Override

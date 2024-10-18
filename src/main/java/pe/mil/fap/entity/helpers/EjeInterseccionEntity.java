@@ -26,7 +26,7 @@ import pe.mil.fap.entity.administration.RestriccionEstandarEntity;
 public class EjeInterseccionEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	private Integer idDetalleMision;
 	private Integer idMision;

@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import pe.mil.fap.common.constants.Configuracion;
+import pe.mil.fap.common.enums.RolEnum;
+import pe.mil.fap.common.utils.UtilHelpers;
 import pe.mil.fap.model.administration.EscuadronDTO;
+import pe.mil.fap.model.administration.MiembroDTO;
 import pe.mil.fap.model.administration.ProgramaDTO; 
 import pe.mil.fap.model.helpers.MessageDTO;
+import pe.mil.fap.model.helpers.ProgramaInscritoDTOResponse;
 import pe.mil.fap.model.helpers.SelectItemDTO;
 import pe.mil.fap.model.security.UsuarioDTO;
 import pe.mil.fap.service.administration.usp.inf.EscuadronService;
@@ -94,6 +98,14 @@ public class ProgramaController {
 		List<ProgramaDTO> lstProgramas = programaService.listarProgramasPorIdEscuadron(idEscuadron);
 		return lstProgramas;
 	} 
+	
+	@GetMapping("/listarProgramasACalificarPorPeriodo")
+	@ResponseBody
+	public List<ProgramaInscritoDTOResponse> listarProgramasACalificarPorPeriodo(HttpServletRequest request) throws Exception{
+		String noTipoInstruccion = (String) request.getSession().getAttribute("noTipoInstruccion");
+		Integer idMiembro = (Integer) request.getSession().getAttribute("idMiembro");
+	 	return programaService.listarProgramasACalificarPorPeriodo(UtilHelpers.getCurrentYear(), noTipoInstruccion, idMiembro);
+	}
 	
 	@PostMapping("/guardar")
 	@ResponseBody

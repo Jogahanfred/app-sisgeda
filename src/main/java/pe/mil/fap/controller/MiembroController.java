@@ -4,6 +4,7 @@ import static pe.mil.fap.common.utils.UtilHelpers.getCurrentYear;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import pe.mil.fap.common.constants.Configuracion;
 import pe.mil.fap.common.constants.Configuracion.Helper;
+import pe.mil.fap.common.enums.RolEnum;
+import pe.mil.fap.common.utils.UtilHelpers;
+import pe.mil.fap.model.administration.EscuadronDTO;
 import pe.mil.fap.model.administration.MiembroDTO;
 import pe.mil.fap.model.administration.PersonalDTO;
 import pe.mil.fap.model.administration.UnidadDTO;
@@ -44,6 +48,7 @@ public class MiembroController {
 		this.unidadService = unidadService;
 		this.personalService = personalService;
 	}
+	
 	
 	@GetMapping("/instructores")
 	public String indexInstructores(Model model, HttpServletRequest request) throws Exception{ 
@@ -122,6 +127,31 @@ public class MiembroController {
 	@ResponseBody
 	public List<MiembroDTO> listarAlumnos(@RequestParam(name = "nuPeriodo") Integer nuPeriodo) throws Exception{
 		List<MiembroDTO> lstMiembros =  miembroService.listarMiembros(nuPeriodo, "ALUMNO");
+		return lstMiembros;
+	}
+	
+	@GetMapping("/listarMiembrosACalificarPorPeriodo")
+	@ResponseBody
+	public List<MiembroDTO> listarMiembrosACalificarPorPeriodo(@RequestParam(name = "idEscuadron", required = false) Integer idEscuadron, HttpServletRequest request) throws Exception{
+		String noTipoInstruccion = (String) request.getSession().getAttribute("noTipoInstruccion");
+		String rolLogeado = (String) request.getSession().getAttribute(Configuracion.Helper.ROL_LOGEADO); 
+
+		RolEnum rolLogeadoEnum = RolEnum.valueOf(rolLogeado);
+		List<MiembroDTO> lstMiembros = new ArrayList<>();
+		switch (rolLogeadoEnum) {
+	    	case ROLE_ADMIN:  //Debe seleccionar el escuadron 
+	    	case ROLE_JEOPE:  //Debe seleccionar el escuadron
+	    		lstMiembros =  miembroService.listarMiembrosACalificarPorPeriodo(idEscuadron, UtilHelpers.getCurrentYear(), noTipoInstruccion);
+	    		break;
+	    	case ROLE_COESC:
+		    case ROLE_JEINS:
+		    case ROLE_INSTR:
+		    	Integer idEscuadronRequest = (Integer) request.getSession().getAttribute("idEscuadron");
+		    	lstMiembros =  miembroService.listarMiembrosACalificarPorPeriodo(idEscuadronRequest, UtilHelpers.getCurrentYear(), noTipoInstruccion);
+    		    break; 
+		    default: 
+		        break;
+		}
 		return lstMiembros;
 	}
 	

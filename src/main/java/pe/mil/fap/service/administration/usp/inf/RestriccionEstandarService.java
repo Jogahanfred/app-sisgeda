@@ -9,5 +9,6 @@ import pe.mil.fap.service.exception.ServiceException;
 public interface RestriccionEstandarService {
 
 	List<RestriccionEstandarDTO> listarRestricciones(Integer idDetalleMision) throws ServiceException;
+	List<RestriccionEstandarDTO> listarRestriccionesPorIdDetalleCalificacion(Integer idDetalleCalificacion) throws ServiceException;
 	MessageDTO guardar(RestriccionEstandarDTO dto) throws ServiceException;
 }

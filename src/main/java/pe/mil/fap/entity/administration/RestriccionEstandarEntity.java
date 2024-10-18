@@ -21,6 +21,12 @@ import jakarta.validation.constraints.Size;
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_DETALLE_MISION", type = Integer.class),
 				   						@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
 		}), 
+		@NamedStoredProcedureQuery(name = "restriccionEstandar.listarPorIdDetalleCalificacion", 
+								   procedureName = "PKG_RESTRICCION_ESTANDAR.SP_LISTAR_POR_ID_DETALLE_CALIFICACION", 
+								   parameters = { 
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_DETALLE_CALIFICACION", type = Integer.class),
+				   						@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+		}), 
 		@NamedStoredProcedureQuery(name = "restriccionEstandar.insertar", 
 								   procedureName = "PKG_RESTRICCION_ESTANDAR.SP_INSERTAR_RESTRICCION", 
 								   parameters = {						

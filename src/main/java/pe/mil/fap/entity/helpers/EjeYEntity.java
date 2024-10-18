@@ -16,6 +16,13 @@ import jakarta.persistence.StoredProcedureParameter;
 									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_SUB_FASE", type = Integer.class), 
 									
 									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
+	}),
+	@NamedStoredProcedureQuery(name = "calificarMision.listarEjeY", 
+							   procedureName = "PKG_CALIFICAR_MISION.SP_LISTAR_EJE_Y", 
+							   parameters = {						
+									@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_CALIFICADO", type = Integer.class), 
+									
+									@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
 	})
 })
 

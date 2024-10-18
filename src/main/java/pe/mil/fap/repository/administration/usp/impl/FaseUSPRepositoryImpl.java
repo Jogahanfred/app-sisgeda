@@ -2,6 +2,7 @@ package pe.mil.fap.repository.administration.usp.impl;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
 import pe.mil.fap.common.utils.UtilHelpers;
+import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.administration.FaseEntity; 
 import pe.mil.fap.repository.administration.usp.inf.FaseUSPRepository;
 import pe.mil.fap.repository.exception.RepositoryException;
@@ -43,6 +45,36 @@ public class FaseUSPRepositoryImpl implements FaseUSPRepository {
 				fase.setTxDescripcionFase((String) obj[8]);
 				fase.setTxDescripcionPrograma((String) obj[9]);
 				fase.setIdEscuadron(Integer.parseInt(String.valueOf(obj[10])));
+				lstFase.add(fase);
+
+			}
+			return lstFase;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FaseEntity> listarFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro, Integer idPrograma)
+			throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("fase.listarCalificarPorPeriodo");
+			spq.setParameter("P_PERIODO", nuPeriodo);
+			spq.setParameter("P_ID_CALIFICADO", idMiembro);
+			spq.setParameter("P_ID_PROGRAMA", idPrograma);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<FaseEntity> lstFase = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				FaseEntity fase = new FaseEntity();
+
+				fase.setIdFase(Integer.parseInt(String.valueOf(obj[0])));
+				fase.setTxDescripcionFase((String) obj[1]);
+				fase.setNuTotalHora(Integer.parseInt(String.valueOf(obj[2])));
+				fase.setNuTotalSubFase(Integer.parseInt(String.valueOf(obj[3])));
 				lstFase.add(fase);
 
 			}
@@ -120,6 +152,44 @@ public class FaseUSPRepositoryImpl implements FaseUSPRepository {
 		}
 	}
 	
+	@Override
+	public Optional<FaseEntity> buscarId(Integer id) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("fase.buscarId");
+			spq.setParameter("P_ID_FASE", id);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<FaseEntity> lstFase = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				FaseEntity fase = new FaseEntity();
+
+				fase.setIdFase(Integer.parseInt(String.valueOf(obj[0])));
+				fase.setIdBancoFase(Integer.parseInt(String.valueOf(obj[1])));
+				fase.setIdPrograma(Integer.parseInt(String.valueOf(obj[2])));
+				fase.setNuTotalHora(Integer.parseInt(String.valueOf(obj[3])));
+				fase.setNuTotalSubFase(Integer.parseInt(String.valueOf(obj[4])));
+				fase.setTxFinalidad((String) obj[5]);
+				fase.setFlBloqueado(Integer.parseInt(String.valueOf(obj[6])));
+				fase.setFlEstado(Integer.parseInt(String.valueOf(obj[7])));
+				fase.setTxDescripcionFase((String) obj[8]);
+				fase.setTxDescripcionPrograma((String) obj[9]);
+				fase.setIdEscuadron(Integer.parseInt(String.valueOf(obj[10])));
+				lstFase.add(fase);
+
+			}
+			
+			if (lstFase.isEmpty()) { 
+				return Optional.empty();
+			}
+			FaseEntity fase = (FaseEntity) lstFase.get(0);
+			return Optional.of(fase);
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
+
 	@Override
 	public String guardar(FaseEntity entity) throws RepositoryException { 
 		try {

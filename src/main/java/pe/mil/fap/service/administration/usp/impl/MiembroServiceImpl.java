@@ -31,10 +31,10 @@ public class MiembroServiceImpl implements MiembroService {
 	}
 
 	@Override
-	public List<MiembroDTO> listarMiembrosACalificarPorPeriodo(Integer nuPeriodo, String noRol)
+	public List<MiembroDTO> listarMiembrosACalificarPorPeriodo(Integer idEscuadron, Integer nuPeriodo, String noTipoInstruccion)
 			throws ServiceException {
 		try {
-			List<MiembroEntity> lstEntity = miembroUSPRepository.listarMiembrosACalificarPorPeriodo(nuPeriodo, noRol); 
+			List<MiembroEntity> lstEntity = miembroUSPRepository.listarMiembrosACalificarPorPeriodo(idEscuadron, nuPeriodo, noTipoInstruccion); 
 			List<MiembroDTO> lstDTO = miembroMapper.toListDTO(lstEntity);
 			if (!lstDTO.isEmpty()) {
 				for (MiembroDTO miembro : lstDTO) {
@@ -67,17 +67,42 @@ public class MiembroServiceImpl implements MiembroService {
 	public Optional<MiembroDTO> buscarPorId(Integer idMiembro) throws ServiceException {
 		try { 
 			Optional<MiembroEntity> optEntity = miembroUSPRepository.buscarPorId(idMiembro);
-			return Optional.of(miembroMapper.toDTO(optEntity.get()));
+			Optional<MiembroDTO> optDto = Optional.of(miembroMapper.toDTO(optEntity.get()));
+			if (!optDto.isEmpty()) { 
+				optDto.get().setPersonal(personalService.buscarPorNsa(optDto.get().getCoNsa()).get());
+				
+			}
+			return optDto;
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
 
 	@Override
-	public Optional<MiembroDTO> buscarPorNsa(String coNsa, Integer nuPeriodo, String noRol) throws ServiceException {
+	public Optional<MiembroDTO> buscarPorNsaPorRolPeriodo(String coNsa, Integer nuPeriodo, String noRol) throws ServiceException {
 		try { 
-			Optional<MiembroEntity> optEntity = miembroUSPRepository.buscarPorNsa(coNsa, nuPeriodo, noRol);
-			return Optional.of(miembroMapper.toDTO(optEntity.get()));
+			Optional<MiembroEntity> optEntity = miembroUSPRepository.buscarPorNsaPorRolPeriodo(coNsa, nuPeriodo, noRol);
+			Optional<MiembroDTO> optDto = Optional.of(miembroMapper.toDTO(optEntity.get()));
+			if (!optDto.isEmpty()) { 
+				optDto.get().setPersonal(personalService.buscarPorNsa(optDto.get().getCoNsa()).get());
+				
+			}
+			return optDto; 
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public Optional<MiembroDTO> buscarPorNsa(String coNsa) throws ServiceException {
+		try { 
+			Optional<MiembroEntity> optEntity = miembroUSPRepository.buscarPorNsa(coNsa);
+			Optional<MiembroDTO> optDto = Optional.of(miembroMapper.toDTO(optEntity.get()));
+			if (!optDto.isEmpty()) { 
+				optDto.get().setPersonal(personalService.buscarPorNsa(optDto.get().getCoNsa()).get());
+				
+			}
+			return optDto; 
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

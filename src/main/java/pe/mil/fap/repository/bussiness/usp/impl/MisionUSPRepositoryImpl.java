@@ -8,12 +8,15 @@ import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.StoredProcedureParameter;
 import jakarta.persistence.StoredProcedureQuery;
 import pe.mil.fap.common.enums.SeveridadEnum;
 import pe.mil.fap.entity.administration.EscuadronEntity;
 import pe.mil.fap.entity.bussiness.DetalleMisionEntity;
-import pe.mil.fap.entity.bussiness.MisionEntity;   
+import pe.mil.fap.entity.bussiness.MisionEntity;
+import pe.mil.fap.entity.helpers.CalificarMisionEntity;
 import pe.mil.fap.repository.bussiness.usp.inf.MisionUSPRepository;
 import pe.mil.fap.repository.exception.RepositoryException;
 
@@ -22,6 +25,45 @@ public class MisionUSPRepositoryImpl implements MisionUSPRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CalificarMisionEntity> listarMisionesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro,
+			Integer idSubFase) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("mision.listarCalificarPorPeriodo");
+			spq.setParameter("P_PERIODO",nuPeriodo);
+			spq.setParameter("P_ID_CALIFICADO",idMiembro);
+			spq.setParameter("P_ID_SUB_FASE",idSubFase);
+			spq.execute();
+ 
+			List<Object[]> results =  spq.getResultList();
+			List<CalificarMisionEntity> lstMisiones = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				CalificarMisionEntity mision = new CalificarMisionEntity();
+
+				mision.setIdMision(Integer.parseInt(String.valueOf(obj[0])));
+				mision.setTxDescripcionTipoMision((String) obj[1]);
+				mision.setTxNombreTipoMision((String) obj[2]);
+				mision.setCoCodigo((String) obj[3]);
+				mision.setFlChequeo(Integer.parseInt(String.valueOf(obj[4])));
+				mision.setIdCalificador(obj[5] != null ? Integer.parseInt(String.valueOf(obj[5])): null);
+				mision.setIdCalificacion(Integer.parseInt(String.valueOf(obj[6])));
+				
+				mision.setQtNota(obj[7] != null ? Double.parseDouble(String.valueOf(obj[7])): null);
+				mision.setCoCalificacionVuelo(obj[8] != null ? String.valueOf(obj[8]): null);
+				mision.setCoNroCola(obj[9] != null ? String.valueOf(obj[9]): null);
+				mision.setFeProgramacion(obj[10] != null ? String.valueOf(obj[10]): null);
+				mision.setFeEjecucion(obj[10] != null ? String.valueOf(obj[11]): null);
+				
+				lstMisiones.add(mision);
+			}
+			return lstMisiones;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

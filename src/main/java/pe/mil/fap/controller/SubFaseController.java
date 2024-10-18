@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import pe.mil.fap.common.constants.Configuracion;
+import pe.mil.fap.common.utils.UtilHelpers;
 import pe.mil.fap.model.administration.BancoFaseDTO;
 import pe.mil.fap.model.administration.BancoSubFaseDTO;
 import pe.mil.fap.model.administration.EscuadronDTO;
 import pe.mil.fap.model.administration.SubFaseDTO; 
 import pe.mil.fap.model.helpers.MessageDTO;
 import pe.mil.fap.model.helpers.SelectItemDTO;
+import pe.mil.fap.model.helpers.SubFaseInscritoDTOResponse;
 import pe.mil.fap.model.security.UsuarioDTO;
 import pe.mil.fap.service.administration.usp.inf.BancoFaseService;
 import pe.mil.fap.service.administration.usp.inf.BancoSubFaseService;
@@ -113,6 +115,14 @@ public class SubFaseController {
 			HttpServletRequest request) throws Exception {
 		List<SubFaseDTO> lstSubFases = subFaseService.listarSubFasesPorIdFase(idFase);
 		return lstSubFases;
+	}
+	
+	@GetMapping("/listarSubFasesACalificarPorPeriodo")
+	@ResponseBody
+	public List<SubFaseInscritoDTOResponse> listarSubFasesACalificarPorPeriodo(HttpServletRequest request) throws Exception {
+		Integer idMiembro = (Integer) request.getSession().getAttribute("idMiembro");
+		Integer idFase = (Integer) request.getSession().getAttribute("idFase");
+		return subFaseService.listarSubFasesACalificarPorPeriodo(UtilHelpers.getCurrentYear(), idMiembro, idFase);
 	}
 
 	@GetMapping("/listarFiltroPeriodo")

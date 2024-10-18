@@ -41,7 +41,13 @@ import jakarta.persistence.ParameterMode;
 								   parameters = { 
 										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_ESCUADRON", type = Integer.class),
 										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_CURSOR", type = void.class)
-		}), 
+		}),  
+		@NamedStoredProcedureQuery(name = "programa.buscarId", 
+								   procedureName = "PKG_PROGRAMA.SP_BUSCAR_ID", 
+								   parameters = {
+										@StoredProcedureParameter(mode = ParameterMode.IN, name = "P_ID_PROGRAMA", type = Integer.class),
+										@StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "P_OBJECTO", type = void.class) 
+		}),
 		@NamedStoredProcedureQuery(name = "programa.insertar", 
 								   procedureName = "PKG_PROGRAMA.SP_INSERTAR", 
 								   parameters = {						

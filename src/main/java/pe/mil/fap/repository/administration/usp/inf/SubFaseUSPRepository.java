@@ -3,7 +3,7 @@ package pe.mil.fap.repository.administration.usp.inf;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+ 
 import pe.mil.fap.entity.administration.SubFaseEntity;
 import pe.mil.fap.entity.helpers.EjeInterseccionEntity;
 import pe.mil.fap.entity.helpers.EjeXEntity;
@@ -13,6 +13,7 @@ import pe.mil.fap.repository.exception.RepositoryException;
 public interface SubFaseUSPRepository {
 
 	List<SubFaseEntity> listarSubFases() throws RepositoryException;
+	List<SubFaseEntity> listarSubFasesACalificarPorPeriodo(Integer nuPeriodo, Integer idMiembro, Integer idFase) throws RepositoryException;
 	List<SubFaseEntity> listarSubFasesPorIdUnidad(Integer idUnidad) throws RepositoryException;
 	List<SubFaseEntity> listarSubFasesPorIdFase(Integer idFase) throws RepositoryException;
 	List<Map<Integer, String>> listarFiltroPeriodo(Integer nuPeriodo) throws RepositoryException;

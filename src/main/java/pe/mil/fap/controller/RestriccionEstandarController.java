@@ -31,6 +31,13 @@ public class RestriccionEstandarController {
 		List<RestriccionEstandarDTO> lstRestricciones =  restriccionEstandarService.listarRestricciones(idDetalleMision);
 		return lstRestricciones;
 	}
+	
+	@GetMapping("/listarPorIdDetalleCalificacion")
+	@ResponseBody
+	public List<RestriccionEstandarDTO> listarPorIdDetalleCalificacion(@RequestParam(name = "idDetalleCalificacion", required = true) Integer idDetalleCalificacion, HttpServletRequest request) throws Exception{
+		List<RestriccionEstandarDTO> lstRestricciones =  restriccionEstandarService.listarRestriccionesPorIdDetalleCalificacion(idDetalleCalificacion);
+		return lstRestricciones;
+	}
  
 	@PostMapping("/guardar")
 	@ResponseBody

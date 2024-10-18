@@ -4,15 +4,63 @@ const nextButton = document.getElementById('page-next');
 let currentPage = 1;
 const itemsPerPage = 20;
 
+const GLOBAL = {
+	idEscuadron: 0
+}
+
 renderizarLista();
+const cboBusquedaUnidad = document.getElementById("cboBusquedaUnidad");
+const cboBusquedaUnidadVal = new Choices(cboBusquedaUnidad); 
+
+const cboBusquedaEscuadron = document.getElementById("cboBusquedaEscuadron");
+let cboBusquedaEscuadronVal = new Choices(cboBusquedaEscuadron); 
+
+cboBusquedaUnidad.addEventListener("change", async function(){
+	document.getElementById('content-data').style.display = 'none';
+	document.getElementById('noresult').style.display = 'block';
+	let idUnidad = cboBusquedaUnidad.value;
+	try {
+		const response = await fetchListarEscuadronPorUnidad(idUnidad);
+		if (cboBusquedaEscuadronVal) cboBusquedaEscuadronVal.destroy();
+		cboBusquedaEscuadronVal = new Choices(cboBusquedaEscuadron, {
+			searchEnabled: false
+		});
+		const groupedChoices = llenarCboEscuadron(response);
+		cboBusquedaEscuadronVal.setChoices(groupedChoices, 'value', 'label', false);
+	} catch (error) {
+		console.error('Error al listar escuadron:', error);
+	}
+});
+
+function llenarCboEscuadron(lstEscuadron) {
+	const choices = [];
+
+	lstEscuadron.forEach(escuadron => { 
+		choices.push({
+			value: escuadron.idEscuadron.toString(),
+			label: escuadron.coSigla,
+			selected: false,
+			disabled: false
+		});
+	});
+	return choices;
+}
+
+cboBusquedaEscuadron.addEventListener("change", function (){
+	const idEscuadron = cboBusquedaEscuadron.value;
+	GLOBAL.idEscuadron = idEscuadron;
+	renderizarLista();
+	
+});
 
 async function renderizarLista() {
 	document.getElementById('loader').style.display = 'block';
 	document.getElementById('content-data').style.display = 'none';
 	document.getElementById('noresult').style.display = 'none';
-
+ 
 	try {
-		const lstMiembros = lstMiembrosMain;
+		const lstMiembros = await fetchListarMiembrosACalificarPorPeriodo(GLOBAL.idEscuadron);
+		console.log("LSITA: ",lstMiembros); 
 		allcandidateList = lstMiembros;
 		if (lstMiembros.length > 0) {
 			renderizarCardMiembros(lstMiembros, currentPage);
@@ -250,3 +298,30 @@ async function fetchVerProgramasInscritos(idMiembro) {
 	}
 }
 
+async function fetchListarEscuadronPorUnidad(idUnidad) {
+	try {
+		const response = await fetch(`/escuadrones/listarPorIdUnidad?idUnidad=${idUnidad}`);
+		if (!response.ok) {
+			throw new Error(`No se ha podido resolver la lista de operaciones: ${response.status}`);
+		} 
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error al obtener la lista de escuadrones:', error);
+		throw error;
+	}
+}
+
+async function fetchListarMiembrosACalificarPorPeriodo(idEscuadron){
+	try {
+		const response = await fetch(`/miembros/listarMiembrosACalificarPorPeriodo?idEscuadron=${idEscuadron}`);
+		if (!response.ok) {
+			throw new Error(`No se ha podido resolver la lista de miembros: ${response.status}`);
+		} 
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error al obtener la lista de miembros:', error);
+		throw error;
+	}
+}

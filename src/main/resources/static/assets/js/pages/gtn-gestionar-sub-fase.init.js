@@ -33,6 +33,7 @@ btnDesglozarMisiones.addEventListener("click", async function () {
 
 		const response = await fetchObtenerMatriz(idSubFase);
 		const { type, message, data } = response;
+		console.log("RESPONSE MATRIZ: ", data)
 		notification(type, message);
 		DOCUMENTO_GLOBAL.matriz = data;
 
@@ -112,7 +113,9 @@ function generarMatriz(ejeX, ejeY, interseccion) {
 						const divId = `divIdComplete-${intersection.idMision}-${intersection.idManiobra}`;
 						const idDivInput = `idDivInputComplete-${intersection.idMision}-${intersection.idManiobra}`;
 						tablaHTML += `<td>
-											<div id="${divId}" class="position-relative mb-0"> 
+										<div class="d-flex justify-content-center">
+											<div id="${divId}" 
+											     class="position-relative mb-0" style="width:3rem;"> 
 												<input id="${idDivInput}"
 												       type="text" 
 													   dir="ltr" 
@@ -127,6 +130,8 @@ function generarMatriz(ejeX, ejeY, interseccion) {
 													   data-id-mision=${intersection.idMision}
 													   data-id-maniobra=${intersection.idManiobra}>
 					                        </div>
+					                    </div>
+					                        
 					                  </td>`;
 					} else {
 						tablaHTML += '<td></td>';

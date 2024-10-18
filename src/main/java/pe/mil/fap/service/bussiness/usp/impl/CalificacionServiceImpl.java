@@ -1,28 +1,48 @@
 package pe.mil.fap.service.bussiness.usp.impl;
  
 import java.util.ArrayList; 
-import java.util.List; 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional; 
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import pe.mil.fap.common.utils.UtilHelpers; 
+import pe.mil.fap.common.enums.SeveridadEnum;
+import pe.mil.fap.common.utils.UtilHelpers;
+import pe.mil.fap.entity.helpers.EjeInterseccionACalificarEntity;
+import pe.mil.fap.entity.helpers.EjeInterseccionEntity;
+import pe.mil.fap.entity.helpers.EjeXEntity;
+import pe.mil.fap.entity.helpers.EjeYEntity;
 import pe.mil.fap.entity.helpers.InscripcionMisionEntity;
 import pe.mil.fap.exception.BadRequestException;
 import pe.mil.fap.exception.ConflictException;
 import pe.mil.fap.exception.NotFoundException;
 import pe.mil.fap.mappers.bussiness.inf.CalificacionMapper;
-import pe.mil.fap.mappers.helpers.inf.InscripcionMisionMapper; 
+import pe.mil.fap.mappers.helpers.inf.EjeInterseccionACalificarMapper;
+import pe.mil.fap.mappers.helpers.inf.EjeInterseccionMapper;
+import pe.mil.fap.mappers.helpers.inf.EjeXMapper;
+import pe.mil.fap.mappers.helpers.inf.EjeYMapper;
+import pe.mil.fap.mappers.helpers.inf.InscripcionMisionMapper;
+import pe.mil.fap.model.administration.EstandarDTO;
 import pe.mil.fap.model.administration.GrupoDTO;
+import pe.mil.fap.model.administration.MiembroDTO;
 import pe.mil.fap.model.bussiness.CalificacionDTO;
 import pe.mil.fap.model.bussiness.DetalleCalificacionDTO; 
 import pe.mil.fap.model.bussiness.MisionDTO;
+import pe.mil.fap.model.helpers.EjeInterseccionACalificarDTO;
+import pe.mil.fap.model.helpers.EjeInterseccionDTO;
+import pe.mil.fap.model.helpers.EjeXDTO;
+import pe.mil.fap.model.helpers.EjeYDTO;
 import pe.mil.fap.model.helpers.InscripcionMisionDTO;
+import pe.mil.fap.model.helpers.MatrizMisionDTO;
+import pe.mil.fap.model.helpers.MatrizSubFaseDTO;
 import pe.mil.fap.model.helpers.MessageDTO;
 import pe.mil.fap.model.helpers.RegistroCalificacionDTORequest;
 import pe.mil.fap.repository.bussiness.usp.inf.CalificacionUSPRepository; 
 import pe.mil.fap.repository.exception.RepositoryException;
+import pe.mil.fap.service.administration.usp.inf.EstandarService;
+import pe.mil.fap.service.administration.usp.inf.MiembroService;
 import pe.mil.fap.service.bussiness.usp.inf.CalificacionService;
 import pe.mil.fap.service.bussiness.usp.inf.GrupoService;
 import pe.mil.fap.service.bussiness.usp.inf.MisionService;
@@ -31,23 +51,41 @@ import pe.mil.fap.service.exception.ServiceException;
 @Service
 public class CalificacionServiceImpl implements CalificacionService {
 
-	private final MisionService misionService;
 	private final CalificacionUSPRepository calificacionUSPRepository;
+
+	private final MisionService misionService;
+	private final GrupoService grupoService; 
+	private final MiembroService miembroService;
+	private final EstandarService estandarService;
+	
 	private final CalificacionMapper calificacionMapper;
 	private final InscripcionMisionMapper inscripcionMisionMapper;
-	private final GrupoService grupoService; 
+	private final EjeXMapper ejeXMapper;
+	private final EjeYMapper ejeYMapper;
+	private final EjeInterseccionACalificarMapper ejeInterseccionACalificacionMapper;
+
 	
-	public CalificacionServiceImpl(final MisionService misionService,
+	public CalificacionServiceImpl(final EstandarService estandarService, 
+								   final MisionService misionService,
 								   final CalificacionUSPRepository calificacionUSPRepository,
 								   final CalificacionMapper calificacionMapper,
 								   final InscripcionMisionMapper inscripcionMisionMapper,
-								   final GrupoService grupoService) {
+								   final GrupoService grupoService,
+								   final EjeXMapper ejeXMapper,
+								   final EjeYMapper ejeYMapper,
+								   final EjeInterseccionACalificarMapper ejeInterseccionACalificacionMapper,
+								   final MiembroService miembroService) {
 		super();
+		this.estandarService = estandarService;
 		this.calificacionUSPRepository = calificacionUSPRepository;
 		this.misionService = misionService;
 		this.calificacionMapper = calificacionMapper;
 		this.inscripcionMisionMapper = inscripcionMisionMapper;
 		this.grupoService = grupoService;
+		this.ejeXMapper = ejeXMapper;
+		this.ejeYMapper = ejeYMapper;
+		this.ejeInterseccionACalificacionMapper = ejeInterseccionACalificacionMapper;
+		this.miembroService = miembroService;
 	}
 	
 	@Override 
@@ -142,6 +180,107 @@ public class CalificacionServiceImpl implements CalificacionService {
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	@Override
+	public MessageDTO asignarInstructor(Integer idCalificador, Integer idCalificacion) throws ServiceException {
+		try { 
+			String mensaje = calificacionUSPRepository.asignarInstructor(idCalificador, idCalificacion);
+			return MessageDTO.builder().message(mensaje).build();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public MessageDTO obtenerMatrizACalificar(Integer idCalificado, String coNsaUsuarioLogeado) throws ServiceException {
+		try { 			
+			Optional<MiembroDTO> optMiembro = miembroService.buscarPorNsa(coNsaUsuarioLogeado);
+			if (optMiembro.isEmpty()) { 
+				throw new Exception("No existe miembro");
+			}
+			MatrizMisionDTO matriz = new MatrizMisionDTO();
+			
+			List<EjeXEntity> lstEjeXEntity = calificacionUSPRepository.listarEjeX(idCalificado); 
+			List<EjeYEntity> lstEjeYEntity = calificacionUSPRepository.listarEjeY(idCalificado); 
+			List<EjeInterseccionACalificarEntity> lstInterseccionEntity = calificacionUSPRepository.listarEjeInterseccionACalificar(idCalificado);
+
+			List<EjeXDTO> lstEjeXDTO = ejeXMapper.toListDTO(lstEjeXEntity); 
+			List<EjeYDTO> lstEjeYDTO = ejeYMapper.toListDTO(lstEjeYEntity);
+			List<EjeInterseccionACalificarDTO> lstInterseccionDTO = ejeInterseccionACalificacionMapper.toListDTO(lstInterseccionEntity);
+			
+			if (lstEjeXDTO.size() == 0 || lstEjeYDTO.size() == 0 || lstInterseccionDTO.size() == 0) {
+				return MessageDTO.builder().type(SeveridadEnum.WARNING.getValor())
+										   .message("La sub fase no tiene información para poder generar matriz")
+										   .build();
+			}
+			lstEjeXDTO.forEach(ejeX -> ejeX.setFlHabilitado(Objects.equals(ejeX.getIdCalificador(), optMiembro.get().getIdMiembro()) ? 1 : 0));			
+			
+			matriz.setLstEjeX(lstEjeXDTO);
+			matriz.setLstEjeY(lstEjeYDTO);
+			matriz.setLstEjeInterseccion(recalcularCalificacionMision(lstInterseccionDTO));
+			  
+			return MessageDTO.builder().type(SeveridadEnum.SUCCESS.getValor())
+									   .message("La matriz ha sido generada correctamente")
+									   .data(matriz)
+									   .build();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public MessageDTO obtenerMatrizACalificarPorIdCalificacion(Integer idCalificado, Integer idCalificacion)
+			throws ServiceException {
+		try { 			
+			MatrizMisionDTO matriz = new MatrizMisionDTO();
+			
+			List<EjeXEntity> lstEjeXEntity = calificacionUSPRepository.listarEjeXPorIdCalificacion(idCalificado, idCalificacion); 
+			List<EjeYEntity> lstEjeYEntity = calificacionUSPRepository.listarEjeY(idCalificado); 
+			List<EjeInterseccionACalificarEntity> lstInterseccionEntity = calificacionUSPRepository.listarEjeInterseccionACalificarPorIdCalificacion(idCalificado, idCalificacion);
+
+			List<EjeXDTO> lstEjeXDTO = ejeXMapper.toListDTO(lstEjeXEntity); 
+			List<EjeYDTO> lstEjeYDTO = ejeYMapper.toListDTO(lstEjeYEntity);
+			List<EjeInterseccionACalificarDTO> lstInterseccionDTO = ejeInterseccionACalificacionMapper.toListDTO(lstInterseccionEntity);
+			
+			if (lstEjeXDTO.size() == 0 || lstEjeYDTO.size() == 0 || lstInterseccionDTO.size() == 0) {
+				return MessageDTO.builder().type(SeveridadEnum.WARNING.getValor())
+										   .message("La sub fase no tiene información para poder generar matriz")
+										   .build();
+			}
+			
+			matriz.setLstEjeX(lstEjeXDTO);
+			matriz.setLstEjeY(lstEjeYDTO);
+			matriz.setLstEjeInterseccion(recalcularCalificacionMision(lstInterseccionDTO));
+			  
+			return MessageDTO.builder().type(SeveridadEnum.SUCCESS.getValor())
+									   .message("La matriz ha sido generada correctamente")
+									   .data(matriz)
+									   .build();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	} 
+	
+	@Override
+	public MessageDTO calificarManiobra(Integer idManiobra, Integer idCalificacion, String coEstandarObtenido)
+			throws ServiceException {
+		try { 
+			EstandarDTO estandar = estandarService.buscarPorCodigo(coEstandarObtenido).get();
+			String mensaje = calificacionUSPRepository.calificarManiobra(idManiobra, idCalificacion, estandar.getIdEstandar());
+			return MessageDTO.builder().message(mensaje).build(); 
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<EjeInterseccionACalificarDTO> recalcularCalificacionMision(List<EjeInterseccionACalificarDTO> lstEjeInterseccion) throws ServiceException{
+		try {
+			lstEjeInterseccion.stream().forEach(eje -> eje.validarEstadoManiobra());
+			return lstEjeInterseccion;
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
 
 }

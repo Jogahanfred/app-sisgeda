@@ -2,6 +2,7 @@ package pe.mil.fap.common.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -61,5 +62,16 @@ public final class UtilHelpers {
 		}
 		return errorMessage;
 
+	}
+	
+	public static String getGreetingTimeOfDay() {
+		LocalTime now = LocalTime.now();
+        if (now.isBefore(LocalTime.of(12, 0))) {
+            return "Buenos Días"; // 00:00 hasta 11:59
+        } else if (now.isBefore(LocalTime.of(18, 0))) {
+            return "Buenas Tardes"; // 12:00 hasta 18:00
+        } else {
+            return "Buenas Noches"; // 18:01 hasta 23:59
+        }
 	}
 }

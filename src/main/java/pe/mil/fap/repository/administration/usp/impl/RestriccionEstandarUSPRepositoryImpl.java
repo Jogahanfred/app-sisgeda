@@ -47,6 +47,36 @@ public class RestriccionEstandarUSPRepositoryImpl implements RestriccionEstandar
 			throw new RepositoryException(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RestriccionEstandarEntity> listarRestriccionesPorIdDetalleCalificacion(Integer idDetalleCalificacion) throws RepositoryException {
+		try {
+			StoredProcedureQuery spq = entityManager.createNamedStoredProcedureQuery("restriccionEstandar.listarPorIdDetalleCalificacion");
+			spq.setParameter("P_ID_DETALLE_CALIFICACION", idDetalleCalificacion);
+			spq.execute();
+
+			List<Object[]> results = spq.getResultList();
+			List<RestriccionEstandarEntity> lstRestricciones = new ArrayList<>();
+
+			for (Object[] obj : results) {
+				RestriccionEstandarEntity restriccion = new RestriccionEstandarEntity();
+
+				restriccion.setIdRestriccionEstandar(Integer.parseInt(String.valueOf(obj[0])));
+				restriccion.setIdDetalleMision(Integer.parseInt(String.valueOf(obj[1])));
+				restriccion.setIdEstandar(Integer.parseInt(String.valueOf(obj[2])));
+				restriccion.setTxMensaje((String) obj[3]);
+				restriccion.setTxDescripcionEstandar((String) obj[4]); 
+				restriccion.setNuNivelEstandar(Integer.parseInt(String.valueOf(obj[5])));
+				
+				lstRestricciones.add(restriccion);
+
+			}
+			return lstRestricciones;
+		} catch (Exception e) {
+			throw new RepositoryException(e);
+		}
+	}
 
 	@Override
 	public String guardar(RestriccionEstandarEntity entity) throws RepositoryException {  
